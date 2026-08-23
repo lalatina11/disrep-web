@@ -3,7 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Button, buttonVariants } from "#/components/ui/button";
+import { Button } from "#/components/ui/button";
 import {
 	Field,
 	FieldDescription,
@@ -51,10 +51,10 @@ const SignUpForm = () => {
 
 	return (
 		<div className="flex flex-col gap-3">
-			<form onClick={form.handleSubmit(onSubmit)}>
+			<form onSubmit={form.handleSubmit(onSubmit)}>
 				<FieldSet>
-					{form.getErrors().root && (
-						<FieldError errors={[form.getErrors().root]} />
+					{form.formState.errors.root && (
+						<FieldError errors={[form.formState.errors.root]} />
 					)}
 					<Controller
 						name="data.display_name"
@@ -118,17 +118,19 @@ const SignUpForm = () => {
 										autoComplete="off"
 									/>
 									<InputGroupAddon align={"inline-end"}>
-										<div
+										<Button
+											type="button"
+											variant="ghost"
+											size="icon-sm"
 											onClick={() =>
 												setShowPassword((p) => ({
 													...p,
 													password: !p.password,
 												}))
 											}
-											className={buttonVariants({ variant: "ghost" })}
 										>
 											{showPassword.password ? <EyeClosed /> : <Eye />}
-										</div>{" "}
+										</Button>
 									</InputGroupAddon>
 								</InputGroup>
 								{!fieldState.invalid && (
@@ -160,17 +162,19 @@ const SignUpForm = () => {
 										type={showPassword.confirm_password ? "text" : "password"}
 									/>
 									<InputGroupAddon align={"inline-end"}>
-										<div
+										<Button
+											type="button"
+											variant="ghost"
+											size="icon-sm"
 											onClick={() =>
 												setShowPassword((p) => ({
 													...p,
 													confirm_password: !p.confirm_password,
 												}))
 											}
-											className={buttonVariants({ variant: "ghost" })}
 										>
 											{showPassword.confirm_password ? <EyeClosed /> : <Eye />}
-										</div>
+										</Button>
 									</InputGroupAddon>
 								</InputGroup>
 								{!fieldState.invalid && (
