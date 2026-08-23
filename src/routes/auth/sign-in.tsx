@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import SignInForm from "#/components/forms/auth-form/sign-in-form";
 import { Button } from "#/components/ui/button";
 import {
 	Card,
+	CardContent,
 	CardDescription,
 	CardFooter,
 	CardHeader,
@@ -19,8 +21,11 @@ function RouteComponent() {
 				<CardTitle>Sign In</CardTitle>
 				<CardDescription>Sign In into your account</CardDescription>
 			</CardHeader>
+			<CardContent>
+				<SignInForm />
+			</CardContent>
 			<CardFooter>
-				Already Have an account?{" "}
+				Don't have an account?{" "}
 				<Button variant="link" asChild>
 					<Link to="/auth/sign-up">Sign Up</Link>
 				</Button>
@@ -28,3 +33,4 @@ function RouteComponent() {
 		</Card>
 	);
 }
+

@@ -22,3 +22,15 @@ export const signUpSchema = z.object({
 });
 
 export type SignUpSchemaType = z.infer<typeof signUpSchema>;
+
+export const signInSchema = z.object({
+	email: z.string().email("Gunakan email yang valid").toLowerCase().trim(),
+	password: z
+		.string()
+		.min(8, "Password minimal 8 karakter")
+		.toLowerCase()
+		.trim(),
+});
+
+export type SignInSchemaType = z.infer<typeof signInSchema>;
+
