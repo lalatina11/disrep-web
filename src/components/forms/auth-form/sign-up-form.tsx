@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "#/components/ui/button";
 import {
 	Field,
@@ -47,6 +48,9 @@ const SignUpForm = () => {
 		if (!res.success) {
 			return form.setError("root", { message: res.message });
 		}
+		toast.success("Pendaftaran berhasil!", {
+			description: "Anda akan diarahkan ke halaman utama",
+		});
 		return nav({ to: "/" });
 	}
 

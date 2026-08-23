@@ -2,6 +2,7 @@ import { TanStackDevtools } from "@tanstack/react-devtools";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { ThemeProvider } from "#/components/provider/theme-provider";
+import { Toaster } from "#/components/ui/sonner";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
@@ -42,6 +43,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					disableTransitionOnChange
 				>
 					{children}
+					<Toaster position="top-center" />
 				</ThemeProvider>
 				<TanStackDevtools
 					config={{
