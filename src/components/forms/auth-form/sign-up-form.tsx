@@ -3,7 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Button } from "#/components/ui/button";
+import { Button, buttonVariants } from "#/components/ui/button";
 import {
 	Field,
 	FieldDescription,
@@ -118,18 +118,17 @@ const SignUpForm = () => {
 										autoComplete="off"
 									/>
 									<InputGroupAddon align={"inline-end"}>
-										<Button
+										<div
 											onClick={() =>
 												setShowPassword((p) => ({
 													...p,
 													password: !p.password,
 												}))
 											}
-											variant={"ghost"}
-											type="button"
+											className={buttonVariants({ variant: "ghost" })}
 										>
 											{showPassword.password ? <EyeClosed /> : <Eye />}
-										</Button>{" "}
+										</div>{" "}
 									</InputGroupAddon>
 								</InputGroup>
 								{!fieldState.invalid && (
@@ -161,18 +160,17 @@ const SignUpForm = () => {
 										type={showPassword.confirm_password ? "text" : "password"}
 									/>
 									<InputGroupAddon align={"inline-end"}>
-										<Button
+										<div
 											onClick={() =>
 												setShowPassword((p) => ({
 													...p,
 													confirm_password: !p.confirm_password,
 												}))
 											}
-											variant={"ghost"}
-											type="button"
+											className={buttonVariants({ variant: "ghost" })}
 										>
 											{showPassword.confirm_password ? <EyeClosed /> : <Eye />}
-										</Button>
+										</div>
 									</InputGroupAddon>
 								</InputGroup>
 								{!fieldState.invalid && (
