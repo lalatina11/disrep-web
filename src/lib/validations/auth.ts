@@ -7,6 +7,11 @@ export const signUpSchema = z.object({
 		.min(8, "Password minimal 8 karakter")
 		.toLowerCase()
 		.trim(),
+	confirm_password: z
+		.string()
+		.min(8, "Konfirmasi Password minimal 8 karakter")
+		.toLowerCase()
+		.trim(),
 	data: z.object({
 		display_name: z
 			.string()
