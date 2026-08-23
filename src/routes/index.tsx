@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ModeToggle } from "#/components/provider/mode-toggle";
 import { Button } from "#/components/ui/button";
 
@@ -11,6 +11,9 @@ function Home() {
 			<p className="mt-4 text-lg">
 				Edit <code>src/routes/index.tsx</code> to get started.
 			</p>
+			<Button asChild>
+				<Link to="/auth/sign-in">Sign In</Link>
+			</Button>
 			<Button variant={"default"}>Test</Button>
 			<ModeToggle />
 		</div>
