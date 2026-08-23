@@ -17,6 +17,7 @@ import {
 	InputGroupAddon,
 	InputGroupInput,
 } from "#/components/ui/input-group";
+import { Spinner } from "#/components/ui/spinner";
 import { signUpAction } from "#/lib/server-actions/auth";
 import { type SignUpSchemaType, signUpSchema } from "#/lib/validations/auth";
 
@@ -48,6 +49,8 @@ const SignUpForm = () => {
 		}
 		return nav({ to: "/" });
 	}
+
+	const isFormBusy = form.formState.isSubmitting || form.formState.isLoading;
 
 	return (
 		<div className="flex flex-col gap-3">
@@ -186,7 +189,9 @@ const SignUpForm = () => {
 							</Field>
 						)}
 					/>
-					<Button type="submit">Daftar Sekarang</Button>
+					<Button disabled={isFormBusy} type="submit">
+						{isFormBusy ? <Spinner /> : "Daftar Sekarang"}
+					</Button>
 				</FieldSet>
 			</form>
 		</div>
