@@ -1,4 +1,5 @@
-import { Shield, User } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Plus, Shield, User } from "lucide-react";
 import useGetAdminAuthority from "#/lib/hooks/use-get-admin-authority";
 import useUserStore from "#/lib/stores/use-user-store";
 import SignOutForm from "./forms/auth-form/sign-out-form";
@@ -25,7 +26,7 @@ const UserDropdown = () => {
 					<User />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent>
+			<DropdownMenuContent className="w-2xs">
 				<div className="flex flex-col items-center">
 					<Avatar>
 						<AvatarImage src={user.avatar} />
@@ -43,7 +44,15 @@ const UserDropdown = () => {
 					</div>
 				</div>
 				<Separator className="my-2" />
-				<SignOutForm className="w-full" />
+				<div className="flex flex-col gap-1">
+					<Button variant={"secondary"} asChild className="w-full">
+						<Link to="/">
+							<Plus />
+							Laporkan Banjir
+						</Link>
+					</Button>
+					<SignOutForm className="w-full" />
+				</div>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
