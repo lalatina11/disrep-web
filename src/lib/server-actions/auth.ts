@@ -5,7 +5,7 @@ import {
 	setCookie,
 } from "@tanstack/react-start/server";
 import type { ApiResponseType, AuthResponseType, User } from "../types";
-import { CookieType } from "../types/enums";
+import { CookieType, ErrorType } from "../types/enums";
 import { signInSchema, signUpSchema } from "../validations/auth";
 
 const ONE_DAY = 60 * 60 * 24;
@@ -161,6 +161,44 @@ export const refreshTokenAction = createServerFn({ method: "POST" }).handler(
 		} catch (error) {
 			console.log({ error });
 			return { success: false, message: "Refresh token gagal", data: null };
+		}
+	},
+);
+
+export const getUserAction = createServerFn({ method: "GET" }).handler(
+	async () => {
+		try {
+			const token = getCookie(CookieType.ACCESS_TOKEN) || "";
+
+			const res = await fetch(`${process.env.API_BASE_URL}/api/auth/sign-in`, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					accept: "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			const response = (await res.json()) as ApiResponseType<AuthResponseType>;
+			const isUnauthorized =
+				res.status === 401 || response.message === ErrorType.UNAUTHORIZED;
+			if (!response.success) {
+				if (isUnauthorized) {
+					const refreshRes = await refreshTokenAction();
+					if (refreshRes.success || refreshRes.data !== null) {
+						return refreshRes;
+					}
+				}
+				return { success: false, message: response.message, data: null };
+			}
+
+			return {
+				success: true,
+				message: "Login berhasil",
+				data: response.data.user,
+			};
+		} catch (error) {
+			console.log({ error });
+			return { success: false, message: "Login gagal", data: null };
 		}
 	},
 );
