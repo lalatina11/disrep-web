@@ -7,14 +7,13 @@ import {
 } from "#/components/cards/disaster-card";
 import MainLayout from "#/components/layouts/main-layout";
 import UnexpectedError from "#/components/templates/unexpected-error";
-import type { ApiResponseType } from "#/lib/types";
 import type { DisasterReport } from "#/lib/types/disaster-types";
 
 export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
 	const { data, isLoading, isError, error, refetch } = useQuery<
-		ApiResponseType<Array<DisasterReport>>
+		Array<DisasterReport>
 	>({
 		queryKey: ["disaster"],
 	});
@@ -42,11 +41,9 @@ function Home() {
 		);
 	}
 
-	if (isError || (data && !data.success)) {
+	if (isError) {
 		const errorMessage =
-			error instanceof Error
-				? error.message
-				: data?.message || "Gagal memuat laporan bencana";
+			error instanceof Error ? error.message : "Gagal memuat laporan bencana";
 		return (
 			<MainLayout>
 				<UnexpectedError
@@ -59,7 +56,7 @@ function Home() {
 		);
 	}
 
-	const reports = data?.data ?? [];
+	const reports = data ?? [];
 
 	return (
 		<MainLayout>
@@ -96,4 +93,3 @@ function Home() {
 		</MainLayout>
 	);
 }
-

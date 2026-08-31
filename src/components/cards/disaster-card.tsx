@@ -104,7 +104,7 @@ export const DisasterCard = ({ report }: { report: DisasterReport }) => {
 								: (author?.display_name?.slice(0, 2).toUpperCase() ?? "U")}
 						</AvatarFallback>
 					</Avatar>
-					<span className="line-clamp-1 max-w-[90px] text-xs font-medium text-foreground">
+					<span className="line-clamp-1 max-w-22.5 text-xs font-medium text-foreground">
 						{disaster.is_anon ? "Anonim" : (author?.display_name ?? "Pengguna")}
 					</span>
 				</div>
