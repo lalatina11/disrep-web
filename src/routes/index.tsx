@@ -4,7 +4,7 @@ import { AlertCircle } from "lucide-react";
 import {
 	DisasterCard,
 	DisasterCardSkeleton,
-} from "#/components/cards/disaster-card";
+} from "#/components/disaster/disaster-card";
 import MainLayout from "#/components/layouts/main-layout";
 import UnexpectedError from "#/components/templates/unexpected-error";
 import type { DisasterReport } from "#/lib/types/disaster-types";
