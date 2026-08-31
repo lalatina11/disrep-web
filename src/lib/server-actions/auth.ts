@@ -99,7 +99,7 @@ export const signInAction = createServerFn({ method: "POST" })
 
 export const signOutAction = createServerFn({ method: "POST" }).handler(
 	async () => {
-		const token = getCookie("access_token") || "";
+		const token = getCookie(CookieType.ACCESS_TOKEN) || "";
 		try {
 			const res = await fetch(`${process.env.API_BASE_URL}/api/auth/sign-out`, {
 				method: "POST",
@@ -115,5 +115,52 @@ export const signOutAction = createServerFn({ method: "POST" }).handler(
 		}
 		deleteCookie(CookieType.ACCESS_TOKEN, { path: "/" });
 		deleteCookie(CookieType.REFRESH_TOKEN, { path: "/" });
+	},
+);
+
+export const refreshTokenAction = createServerFn({ method: "POST" }).handler(
+	async () => {
+		const refresh_token = getCookie(CookieType.REFRESH_TOKEN) || "";
+		try {
+			const res = await fetch(
+				`${process.env.API_BASE_URL}/api/auth/refresh-token`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						accept: "application/json",
+					},
+					body: JSON.stringify({ refresh_token }),
+				},
+			);
+			const response = (await res.json()) as ApiResponseType<AuthResponseType>;
+			if (!response.success) {
+				return { success: false, message: response.message, data: null };
+			}
+
+			setCookie(CookieType.ACCESS_TOKEN, response.data.token.access_token, {
+				path: "/",
+				httpOnly: true,
+				sameSite: "lax",
+				maxAge: ONE_DAY,
+				secure: process.env.APP_ENV === "production",
+			});
+			setCookie(CookieType.REFRESH_TOKEN, response.data.token.refresh_token, {
+				path: "/",
+				httpOnly: true,
+				sameSite: "lax",
+				maxAge: SEVEN_DAY,
+				secure: process.env.APP_ENV === "production",
+			});
+
+			return {
+				success: true,
+				message: "Refresh token berhasil",
+				data: response.data.user,
+			};
+		} catch (error) {
+			console.log({ error });
+			return { success: false, message: "Refresh token gagal", data: null };
+		}
 	},
 );
