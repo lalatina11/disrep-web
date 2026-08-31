@@ -11,40 +11,15 @@ import {
 	CardTitle,
 } from "#/components/ui/card";
 import { Skeleton } from "#/components/ui/skeleton";
+import { formatShortDate, getStatusBadge } from "#/lib/common";
 import type { DisasterReport } from "#/lib/types/disaster-types";
-
-const getStatusBadge = (status: string) => {
-	switch (status.toLowerCase()) {
-		case "aid_arrived":
-			return { label: "Bantuan Tiba", variant: "default" as const };
-		case "in_progress":
-		case "process":
-			return { label: "Diproses", variant: "secondary" as const };
-		case "verified":
-			return { label: "Terverifikasi", variant: "outline" as const };
-		case "resolved":
-		case "completed":
-			return { label: "Selesai", variant: "secondary" as const };
-		case "rejected":
-			return { label: "Ditolak", variant: "destructive" as const };
-		default:
-			return { label: status || "Dilaporkan", variant: "outline" as const };
-	}
-};
 
 export const DisasterCard = ({ report }: { report: DisasterReport }) => {
 	const { disaster, attachments, author, aids } = report;
 	const thumbnail = attachments?.[0]?.media_url;
 	const statusBadge = getStatusBadge(disaster.status);
+	const formattedDate = formatShortDate(disaster.created_at);
 
-	const formattedDate = new Date(disaster.created_at).toLocaleDateString(
-		"id-ID",
-		{
-			day: "numeric",
-			month: "short",
-			year: "numeric",
-		},
-	);
 
 	return (
 		<Link to="/disaster/$id" params={{ id: disaster.id }}>
