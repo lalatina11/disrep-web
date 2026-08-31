@@ -6,8 +6,13 @@ import { Button } from "#/components/ui/button";
 import { Spinner } from "#/components/ui/spinner";
 import { signOutAction } from "#/lib/server-actions/auth";
 import useUserStore from "#/lib/stores/use-user-store";
+import { cn } from "#/lib/utils";
 
-const SignOutForm = () => {
+interface Props {
+	className?: string;
+}
+
+const SignOutForm = (props: Props) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const { pathname } = useLocation();
 	const { clearUser } = useUserStore();
@@ -25,7 +30,12 @@ const SignOutForm = () => {
 	}
 
 	return (
-		<Button onClick={handleLogOut} disabled={isLoading} variant={"destructive"}>
+		<Button
+			className={cn(props.className && props.className)}
+			onClick={handleLogOut}
+			disabled={isLoading}
+			variant={"destructive"}
+		>
 			{isLoading ? (
 				<Spinner />
 			) : (
