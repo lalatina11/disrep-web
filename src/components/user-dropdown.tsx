@@ -26,20 +26,20 @@ const UserDropdown = () => {
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
-				<div className="flex gap-2 items-center">
+				<div className="flex flex-col items-center">
 					<Avatar>
 						<AvatarImage src={user.avatar} />
 						<AvatarFallback>
 							<User />
 						</AvatarFallback>
 					</Avatar>
-					<div className="flex flex-col">
-						<span>{user.display_name}</span>
+					<div className="flex gap-1 items-center">
 						{isAdmin && (
 							<Badge>
 								<Shield />
 							</Badge>
 						)}
+						<span>{user.display_name}</span>
 					</div>
 				</div>
 				<Separator className="my-2" />
