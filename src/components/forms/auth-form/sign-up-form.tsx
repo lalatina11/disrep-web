@@ -20,6 +20,7 @@ import {
 } from "#/components/ui/input-group";
 import { Spinner } from "#/components/ui/spinner";
 import { signUpAction } from "#/lib/server-actions/auth";
+import useUserStore from "#/lib/stores/use-user-store";
 import { type SignUpSchemaType, signUpSchema } from "#/lib/validations/auth";
 
 const SignUpForm = () => {
@@ -27,6 +28,7 @@ const SignUpForm = () => {
 		password: false,
 		confirm_password: false,
 	});
+	const { setUser } = useUserStore();
 	const nav = useNavigate();
 	const form = useForm({
 		resolver: zodResolver(signUpSchema),
@@ -45,9 +47,12 @@ const SignUpForm = () => {
 			});
 		}
 		const res = await signUpAction({ data });
-		if (!res.success) {
-			return form.setError("root", { message: res.message });
+		if (!res.success || res.data === null) {
+			return form.setError("root", {
+				message: res.message || "Pendaftaran gagal!",
+			});
 		}
+		setUser(res.data);
 		toast.success("Pendaftaran berhasil!", {
 			description: "Anda akan diarahkan ke halaman utama",
 		});

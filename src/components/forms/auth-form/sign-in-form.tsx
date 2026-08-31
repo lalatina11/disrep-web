@@ -20,9 +20,11 @@ import {
 } from "#/components/ui/input-group";
 import { Spinner } from "#/components/ui/spinner";
 import { signInAction } from "#/lib/server-actions/auth";
+import useUserStore from "#/lib/stores/use-user-store";
 import { type SignInSchemaType, signInSchema } from "#/lib/validations/auth";
 
 const SignInForm = () => {
+	const { setUser } = useUserStore();
 	const [showPassword, setShowPassword] = useState(false);
 	const nav = useNavigate();
 	const form = useForm({
@@ -35,9 +37,10 @@ const SignInForm = () => {
 
 	async function onSubmit(data: SignInSchemaType) {
 		const res = await signInAction({ data });
-		if (!res.success) {
-			return form.setError("root", { message: res.message });
+		if (!res.success || res.data === null) {
+			return form.setError("root", { message: res.message || "Login gagal!" });
 		}
+		setUser(res.data);
 		toast.success("Login berhasil!", {
 			description: "Anda akan diarahkan ke halaman utama",
 		});
