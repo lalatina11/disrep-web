@@ -4,6 +4,7 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import QueryClientProvider from "#/components/provider/query-client-provider";
 import { ThemeProvider } from "#/components/provider/theme-provider";
 import NotFound from "#/components/templates/not-found";
+import UnexpectedError from "#/components/templates/unexpected-error";
 import { Toaster } from "#/components/ui/sonner";
 import appCss from "../styles.css?url";
 
@@ -30,6 +31,7 @@ export const Route = createRootRoute({
 	}),
 	shellComponent: RootDocument,
 	notFoundComponent: NotFound,
+	errorComponent: UnexpectedError,
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {

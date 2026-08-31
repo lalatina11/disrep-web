@@ -2,11 +2,23 @@ import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, FileQuestion, Home } from "lucide-react";
 import { Button } from "#/components/ui/button";
 
-const NotFound = () => {
+interface NotFoundProps {
+	title?: string;
+	description?: string;
+}
+
+const NotFound = ({
+	title = "Halaman Tidak Ditemukan",
+	description = "Maaf, halaman yang Anda cari tidak dapat ditemukan atau telah dipindahkan.",
+}: NotFoundProps) => {
 	const nav = useNavigate();
 
 	function handleBack() {
-		window.history.back();
+		if (typeof window !== "undefined" && window.history.length > 1) {
+			window.history.back();
+		} else {
+			nav({ to: "/" });
+		}
 	}
 
 	function handleBackToHome() {
@@ -24,10 +36,10 @@ const NotFound = () => {
 						Error 404
 					</span>
 					<h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-						Halaman Tidak Ditemukan
+						{title}
 					</h1>
 					<p className="text-sm leading-relaxed text-muted-foreground">
-						Maaf, halaman yang Anda cari tidak dapat ditemukan atau telah dipindahkan.
+						{description}
 					</p>
 				</div>
 				<div className="flex flex-wrap items-center justify-center gap-3">
@@ -46,4 +58,3 @@ const NotFound = () => {
 };
 
 export default NotFound;
-

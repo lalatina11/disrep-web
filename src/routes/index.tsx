@@ -1,34 +1,99 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import SignOutForm from "#/components/forms/auth-form/sign-out-form";
+import { createFileRoute } from "@tanstack/react-router";
+import { AlertCircle } from "lucide-react";
+import {
+	DisasterCard,
+	DisasterCardSkeleton,
+} from "#/components/cards/disaster-card";
 import MainLayout from "#/components/layouts/main-layout";
-import { ModeToggle } from "#/components/mode-toggle";
-import { Button } from "#/components/ui/button";
-import useUserStore from "#/lib/stores/use-user-store";
+import UnexpectedError from "#/components/templates/unexpected-error";
+import type { ApiResponseType } from "#/lib/types";
 import type { DisasterReport } from "#/lib/types/disaster-types";
 
 export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
-	const { user } = useUserStore();
-
-	const { data } = useQuery<Array<DisasterReport>>({
+	const { data, isLoading, isError, error, refetch } = useQuery<
+		ApiResponseType<Array<DisasterReport>>
+	>({
 		queryKey: ["disaster"],
 	});
 
-	console.log({ data });
+	if (isLoading) {
+		return (
+			<MainLayout>
+				<main className="container mx-auto px-4 py-6">
+					<div className="mb-6 flex flex-col gap-1">
+						<h1 className="text-2xl font-bold tracking-tight text-foreground">
+							Laporan Bencana
+						</h1>
+						<p className="text-sm text-muted-foreground">
+							Daftar laporan bencana dan status bantuan terkini
+						</p>
+					</div>
+					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
+						{Array.from({ length: 12 }).map((_, i) => (
+							// biome-ignore lint/suspicious/noArrayIndexKey: Static placeholder skeletons
+							<DisasterCardSkeleton key={`skeleton-${i}`} />
+						))}
+					</div>
+				</main>
+			</MainLayout>
+		);
+	}
+
+	if (isError || (data && !data.success)) {
+		const errorMessage =
+			error instanceof Error
+				? error.message
+				: data?.message || "Gagal memuat laporan bencana";
+		return (
+			<MainLayout>
+				<UnexpectedError
+					error={new Error(errorMessage)}
+					reset={() => refetch()}
+					title="Gagal Memuat Laporan Bencana"
+					description={errorMessage}
+				/>
+			</MainLayout>
+		);
+	}
+
+	const reports = data?.data ?? [];
 
 	return (
 		<MainLayout>
-			<div className="p-8">
-				<h1 className="text-4xl font-bold">Selamat Datang di Disrep</h1>
-				<Button asChild>
-					<Link to="/auth/sign-in">Masuk</Link>
-				</Button>
-				<Button variant={"default"}>Uji Coba</Button>
-				<ModeToggle />
-				{user && <SignOutForm />}
-			</div>
+			<main className="container mx-auto px-4 py-6">
+				<div className="mb-6 flex flex-col gap-1">
+					<h1 className="text-2xl font-bold tracking-tight text-foreground">
+						Laporan Bencana
+					</h1>
+					<p className="text-sm text-muted-foreground">
+						Daftar laporan bencana dan status bantuan terkini
+					</p>
+				</div>
+
+				{reports.length === 0 ? (
+					<div className="flex min-h-[40vh] flex-col items-center justify-center rounded-xl border border-dashed border-border p-8 text-center">
+						<div className="flex size-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
+							<AlertCircle className="size-7" />
+						</div>
+						<h2 className="mt-4 text-base font-semibold text-foreground">
+							Belum Ada Laporan Bencana
+						</h2>
+						<p className="mt-1 max-w-sm text-sm text-muted-foreground">
+							Saat ini belum ada laporan bencana yang terdaftar di dalam sistem.
+						</p>
+					</div>
+				) : (
+					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
+						{reports.map((report) => (
+							<DisasterCard key={report.disaster.id} report={report} />
+						))}
+					</div>
+				)}
+			</main>
 		</MainLayout>
 	);
 }
+
