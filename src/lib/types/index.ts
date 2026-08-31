@@ -20,3 +20,7 @@ export interface AuthResponseType {
 	};
 	user: User;
 }
+
+export * from "./disaster-types";
+export * from "./enums";
+

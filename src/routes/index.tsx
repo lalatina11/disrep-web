@@ -4,13 +4,14 @@ import SignOutForm from "#/components/forms/auth-form/sign-out-form";
 import { ModeToggle } from "#/components/mode-toggle";
 import { Button } from "#/components/ui/button";
 import useUserStore from "#/lib/stores/use-user-store";
+import type { DisasterReport } from "#/lib/types/disaster-types";
 
 export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
 	const { user } = useUserStore();
 
-	const { data } = useQuery({
+	const { data } = useQuery<Array<DisasterReport>>({
 		queryKey: ["disaster"],
 	});
 
