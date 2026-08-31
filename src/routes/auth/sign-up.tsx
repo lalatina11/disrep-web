@@ -18,16 +18,16 @@ function RouteComponent() {
 	return (
 		<Card className="w-sm">
 			<CardHeader>
-				<CardTitle>Sign Up</CardTitle>
-				<CardDescription>Sign Up your account</CardDescription>
+				<CardTitle>Daftar</CardTitle>
+				<CardDescription>Daftarkan akun baru Anda</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<SignUpForm />
 			</CardContent>
 			<CardFooter>
-				Already Have an account?{" "}
+				Sudah punya akun?{" "}
 				<Button variant="link" asChild>
-					<Link to="/auth/sign-in">Sign In</Link>
+					<Link to="/auth/sign-in">Masuk</Link>
 				</Button>
 			</CardFooter>
 		</Card>

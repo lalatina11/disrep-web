@@ -18,7 +18,7 @@ const SignOutForm = () => {
 		await signOutAction();
 		clearUser();
 		setIsLoading(false);
-		toast.success("Logout Berhasil!");
+		toast.success("Berhasil keluar!");
 		if (pathname !== "/") {
 			nav({ to: "/auth/sign-in" });
 		}
@@ -30,7 +30,7 @@ const SignOutForm = () => {
 				<Spinner />
 			) : (
 				<>
-					<LogOut /> Logout
+					<LogOut /> Keluar
 				</>
 			)}
 		</Button>

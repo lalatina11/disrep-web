@@ -91,7 +91,7 @@ const SignInForm = () => {
 										{...field}
 										id={field.name}
 										aria-invalid={fieldState.invalid}
-										placeholder="john@email.com"
+										placeholder="••••••••"
 										type={showPassword ? "text" : "password"}
 										autoComplete="off"
 									/>

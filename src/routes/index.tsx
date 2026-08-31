@@ -10,14 +10,14 @@ function Home() {
 	const { user } = useUserStore();
 	return (
 		<div className="p-8">
-			<h1 className="text-4xl font-bold">Welcome to TanStack Start</h1>
+			<h1 className="text-4xl font-bold">Selamat Datang di Disrep</h1>
 			<p className="mt-4 text-lg">
-				Edit <code>src/routes/index.tsx</code> to get started.
+				Ubah <code>src/routes/index.tsx</code> untuk memulai.
 			</p>
 			<Button asChild>
-				<Link to="/auth/sign-in">Sign In</Link>
+				<Link to="/auth/sign-in">Masuk</Link>
 			</Button>
-			<Button variant={"default"}>Test</Button>
+			<Button variant={"default"}>Uji Coba</Button>
 			<ModeToggle />
 			{user && <SignOutForm />}
 		</div>

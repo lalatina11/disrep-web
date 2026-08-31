@@ -125,7 +125,7 @@ const SignUpForm = () => {
 										{...field}
 										id={field.name}
 										aria-invalid={fieldState.invalid}
-										placeholder="john@email.com"
+										placeholder="••••••••"
 										type={showPassword.password ? "text" : "password"}
 										autoComplete="off"
 									/>
@@ -169,7 +169,7 @@ const SignUpForm = () => {
 										{...field}
 										id={field.name}
 										aria-invalid={fieldState.invalid}
-										placeholder="john@email.com"
+										placeholder="••••••••"
 										autoComplete="off"
 										type={showPassword.confirm_password ? "text" : "password"}
 									/>
@@ -190,7 +190,9 @@ const SignUpForm = () => {
 									</InputGroupAddon>
 								</InputGroup>
 								{!fieldState.invalid && (
-									<FieldDescription>Konfirmasi password </FieldDescription>
+									<FieldDescription>
+										Konfirmasi password akun anda
+									</FieldDescription>
 								)}
 								{fieldState.invalid && (
 									<FieldError errors={[fieldState.error]} />
