@@ -1,6 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
-import { setCookie } from "@tanstack/react-start/server";
+import {
+	deleteCookie,
+	getCookie,
+	setCookie,
+} from "@tanstack/react-start/server";
 import type { ApiResponseType, AuthResponseType, User } from "../types";
+import { CookieType } from "../types/enums";
 import { signInSchema, signUpSchema } from "../validations/auth";
 
 const ONE_DAY = 60 * 60 * 24;
@@ -23,14 +28,14 @@ export const signUpAction = createServerFn({ method: "POST" })
 				return { success: false, message: response.message, data: null };
 			}
 
-			setCookie("access_token", response.data.token.access_token, {
+			setCookie(CookieType.ACCESS_TOKEN, response.data.token.access_token, {
 				path: "/",
 				httpOnly: true,
 				sameSite: "lax",
 				maxAge: ONE_DAY,
 				secure: process.env.APP_ENV === "production",
 			});
-			setCookie("refresh_token", response.data.token.refresh_token, {
+			setCookie(CookieType.REFRESH_TOKEN, response.data.token.refresh_token, {
 				path: "/",
 				httpOnly: true,
 				sameSite: "lax",
@@ -66,14 +71,14 @@ export const signInAction = createServerFn({ method: "POST" })
 				return { success: false, message: response.message, data: null };
 			}
 
-			setCookie("access_token", response.data.token.access_token, {
+			setCookie(CookieType.ACCESS_TOKEN, response.data.token.access_token, {
 				path: "/",
 				httpOnly: true,
 				sameSite: "lax",
 				maxAge: ONE_DAY,
 				secure: process.env.APP_ENV === "production",
 			});
-			setCookie("refresh_token", response.data.token.refresh_token, {
+			setCookie(CookieType.REFRESH_TOKEN, response.data.token.refresh_token, {
 				path: "/",
 				httpOnly: true,
 				sameSite: "lax",
@@ -92,3 +97,23 @@ export const signInAction = createServerFn({ method: "POST" })
 		}
 	});
 
+export const signOutAction = createServerFn({ method: "POST" }).handler(
+	async () => {
+		const token = getCookie("access_token") || "";
+		try {
+			const res = await fetch(`${process.env.API_BASE_URL}/api/auth/sign-out`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					accept: "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			console.log(await res.json());
+		} catch (err) {
+			console.log({ err });
+		}
+		deleteCookie(CookieType.ACCESS_TOKEN, { path: "/" });
+		deleteCookie(CookieType.REFRESH_TOKEN, { path: "/" });
+	},
+);
