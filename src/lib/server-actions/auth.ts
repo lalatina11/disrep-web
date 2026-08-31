@@ -166,11 +166,11 @@ export const refreshTokenAction = createServerFn({ method: "POST" }).handler(
 );
 
 export const getUserAction = createServerFn({ method: "GET" }).handler(
-	async () => {
+	async (): Promise<ApiResponseType<User | null>> => {
 		try {
 			const token = getCookie(CookieType.ACCESS_TOKEN) || "";
 
-			const res = await fetch(`${process.env.API_BASE_URL}/api/auth/sign-in`, {
+			const res = await fetch(`${process.env.API_BASE_URL}/api/auth/me`, {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
@@ -178,7 +178,7 @@ export const getUserAction = createServerFn({ method: "GET" }).handler(
 					Authorization: `Bearer ${token}`,
 				},
 			});
-			const response = (await res.json()) as ApiResponseType<AuthResponseType>;
+			const response = (await res.json()) as ApiResponseType<User>;
 			const isUnauthorized =
 				res.status === 401 || response.message === ErrorType.UNAUTHORIZED;
 			if (!response.success) {
@@ -193,12 +193,12 @@ export const getUserAction = createServerFn({ method: "GET" }).handler(
 
 			return {
 				success: true,
-				message: "Login berhasil",
-				data: response.data.user,
+				message: "User berhasil",
+				data: response.data,
 			};
 		} catch (error) {
 			console.log({ error });
-			return { success: false, message: "Login gagal", data: null };
+			return { success: false, message: "User gagal", data: null };
 		}
 	},
 );

@@ -9,6 +9,7 @@ export interface User {
 	display_name: string;
 	email: string;
 	avatar: string;
+	role: string;
 	created_at: string;
 	updated_at: string;
 }
@@ -23,4 +24,3 @@ export interface AuthResponseType {
 
 export * from "./disaster-types";
 export * from "./enums";
-
