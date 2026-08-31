@@ -1,6 +1,7 @@
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import QueryClientProvider from "#/components/provider/query-client-provider";
 import { ThemeProvider } from "#/components/provider/theme-provider";
 import NotFound from "#/components/templates/not-found";
 import { Toaster } from "#/components/ui/sonner";
@@ -44,7 +45,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					enableSystem
 					disableTransitionOnChange
 				>
-					{children}
+					<QueryClientProvider>{children}</QueryClientProvider>
 					<Toaster position="top-center" />
 				</ThemeProvider>
 				<TanStackDevtools

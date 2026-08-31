@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import SignOutForm from "#/components/forms/auth-form/sign-out-form";
 import { ModeToggle } from "#/components/mode-toggle";
@@ -8,6 +9,13 @@ export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
 	const { user } = useUserStore();
+
+	const { data } = useQuery({
+		queryKey: ["disaster"],
+	});
+
+	console.log({ data });
+
 	return (
 		<div className="p-8">
 			<h1 className="text-4xl font-bold">Selamat Datang di Disrep</h1>

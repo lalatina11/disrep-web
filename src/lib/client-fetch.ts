@@ -12,7 +12,7 @@ const clientFetch = async <T>(
 	method: HttpMethod,
 	body?: Record<string, unknown>,
 	isRetry = false,
-): Promise<ApiResponseType<T>> => {
+): Promise<T> => {
 	const sanitizedPath = path.startsWith("/") ? path.slice(1) : path;
 
 	try {
@@ -37,7 +37,7 @@ const clientFetch = async <T>(
 				if (typeof window !== "undefined") {
 					window.location.replace("/auth/sign-in");
 				}
-				return result;
+				return result.data;
 			}
 
 			if (!refreshPromise) {
@@ -53,22 +53,17 @@ const clientFetch = async <T>(
 				if (typeof window !== "undefined") {
 					window.location.replace("/auth/sign-in");
 				}
-				return result;
+				return result.data;
 			}
 
 			return clientFetch<T>(sanitizedPath, method, body, true);
 		}
 
-		return result;
+		return result.data;
 	} catch (error) {
 		console.error("clientFetch error:", error);
-		return {
-			success: false,
-			message: error instanceof Error ? error.message : "Request failed",
-			data: null as unknown as T,
-		};
+		return null as unknown as T;
 	}
 };
 
 export default clientFetch;
-
