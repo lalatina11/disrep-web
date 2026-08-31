@@ -5,8 +5,15 @@ const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
 			queryFn: ({ queryKey }) => {
-				return clientFetch(queryKey[0] as string, "GET");
+				const [url, params] = queryKey as [string, Record<string, unknown>?];
+
+				const fullUrl = params
+					? `${url}?${new URLSearchParams(params as Record<string, string>).toString()}`
+					: url;
+				return clientFetch(fullUrl, "GET");
 			},
+			retry: false,
+			staleTime: 1000 * 60,
 		},
 	},
 });
