@@ -2,6 +2,7 @@ import { TanStackDevtools } from "@tanstack/react-devtools";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { ThemeProvider } from "#/components/provider/theme-provider";
+import NotFound from "#/components/templates/not-found";
 import { Toaster } from "#/components/ui/sonner";
 import appCss from "../styles.css?url";
 
@@ -27,6 +28,7 @@ export const Route = createRootRoute({
 		],
 	}),
 	shellComponent: RootDocument,
+	notFoundComponent: NotFound,
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
