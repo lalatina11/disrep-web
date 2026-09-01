@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AlertCircle } from "lucide-react";
 import {
 	DisasterCard,
@@ -99,7 +99,9 @@ function Home() {
 							))}
 						</div>
 						<div className="flex mt-3 justify-center items-center">
-							<Button>Lihat Selengkapnya</Button>
+							<Button asChild>
+								<Link to="/disaster">Lihat Selengkapnya</Link>
+							</Button>
 						</div>
 					</div>
 				)}
