@@ -1,26 +1,33 @@
 import z from "zod/v3";
 
-// {
-//   "title": "Kebakaran Hutan",
-//   "description": "Kebakaran Hutan lurr",
-//   "city": "purwokerto",
-//   "street": "Jalan Jenderal Sudirman",
-//   "lat": -7.4243772,
-//   "lng": 109.2301616,
-//   "is_anon": false,
-//   "attachment": [
-//     {
-//       "media_url": "disaster_media/2026-09-01-00:12:18.954951153-3136c8e1-bc17-4221-824d-68695e526ea0",
-//       "media_type":"image"
-//     },
-//     {
-//       "media_url": "disaster_media/2026-09-01-00:13:50.982447537-8479c50f-9499-4528-9239-3c61170515c1",
-//       "media_type":"video"
+export const disasterAttachmentSchema = z.object({
+	media_url: z.string().min(1, "URL media wajib diisi"),
+	media_type: z.enum(["image", "video"]),
+});
 
-//     }
-//   ]
-// }
-
-export const createDisasterSchema = z.object({});
+export const createDisasterSchema = z.object({
+	title: z
+		.string()
+		.min(3, "Judul laporan minimal 3 karakter")
+		.max(150, "Judul laporan maksimal 150 karakter"),
+	description: z
+		.string()
+		.min(10, "Deskripsi laporan minimal 10 karakter"),
+	city: z.string().min(2, "Kota/Kabupaten wajib diisi"),
+	street: z.string().min(3, "Alamat atau jalan wajib diisi"),
+	lat: z
+		.number({ invalid_type_error: "Titik latitude harus berupa angka" })
+		.min(-90, "Latitude tidak valid")
+		.max(90, "Latitude tidak valid"),
+	lng: z
+		.number({ invalid_type_error: "Titik longitude harus berupa angka" })
+		.min(-180, "Longitude tidak valid")
+		.max(180, "Longitude tidak valid"),
+	is_anon: z.boolean(),
+	attachment: z
+		.array(disasterAttachmentSchema)
+		.min(1, "Minimal unggah 1 foto atau video bukti kejadian"),
+});
 
 export type CreateDisasterSchemaType = z.infer<typeof createDisasterSchema>;
+export type DisasterAttachmentType = z.infer<typeof disasterAttachmentSchema>;
