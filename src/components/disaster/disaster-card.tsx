@@ -13,31 +13,32 @@ import {
 import { Skeleton } from "#/components/ui/skeleton";
 import { formatShortDate, getStatusBadge } from "#/lib/common";
 import type { DisasterReport } from "#/lib/types/disaster-types";
+import { MediaRenderer } from "./media-renderer";
 
 export const DisasterCard = ({ report }: { report: DisasterReport }) => {
 	const { disaster, attachments, author, aids } = report;
-	const thumbnail = attachments?.[0]?.media_url;
+	const firstAttachment = attachments?.[0];
 	const statusBadge = getStatusBadge(disaster.status);
 	const formattedDate = formatShortDate(disaster.created_at);
-
 
 	return (
 		<Link to="/disaster/$id" params={{ id: disaster.id }}>
 			<Card className="flex h-full flex-col overflow-hidden transition-all hover:shadow-md">
 				<div className="relative aspect-video w-full overflow-hidden bg-muted">
-					{thumbnail ? (
-						<img
-							src={thumbnail}
+					{firstAttachment ? (
+						<MediaRenderer
+							src={firstAttachment.media_url}
+							mediaType={firstAttachment.media_type}
 							alt={disaster.title}
-							className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-							loading="lazy"
+							controls={false}
+							showBadge
 						/>
 					) : (
 						<div className="flex h-full w-full items-center justify-center text-muted-foreground">
 							<MapPin className="size-8 opacity-40" />
 						</div>
 					)}
-					<div className="absolute top-2 right-2">
+					<div className="absolute top-2 right-2 z-10">
 						<Badge variant={statusBadge.variant} className="shadow-xs">
 							{statusBadge.label}
 						</Badge>

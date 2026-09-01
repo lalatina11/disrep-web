@@ -28,6 +28,17 @@ import {
 } from "#/components/ui/card";
 import { Separator } from "#/components/ui/separator";
 import { Skeleton } from "#/components/ui/skeleton";
+import {
+	Map,
+	MapControls,
+	MapMarker,
+	MarkerContent,
+	MarkerPopup,
+} from "#/components/ui/map";
+import {
+	MediaRenderer,
+	MediaThumbnail,
+} from "#/components/disaster/media-renderer";
 import { formatDate, formatRupiah, getStatusBadge } from "#/lib/common";
 import type { DisasterReport } from "#/lib/types";
 
@@ -210,11 +221,11 @@ function RouteComponent() {
 										key={`attachment-${index}`}
 										className="group relative aspect-video overflow-hidden rounded-xl border border-border bg-muted"
 									>
-										<img
+										<MediaRenderer
 											src={attachment.media_url}
-											alt={`${disaster.title} - Foto ${index + 1}`}
-											className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-											loading="lazy"
+											mediaType={attachment.media_type}
+											alt={`${disaster.title} - Lampiran ${index + 1}`}
+											showBadge
 										/>
 									</div>
 								))}
@@ -224,7 +235,7 @@ function RouteComponent() {
 						<div className="flex aspect-video w-full flex-col items-center justify-center rounded-xl border border-dashed border-border bg-muted/30 p-8 text-center text-muted-foreground md:aspect-21/7">
 							<ImageIcon className="size-10 opacity-40" />
 							<p className="mt-2 text-sm">
-								Tidak ada lampiran foto untuk laporan ini
+								Tidak ada lampiran foto atau video untuk laporan ini
 							</p>
 						</div>
 					)}
@@ -319,19 +330,12 @@ function RouteComponent() {
 															</p>
 															<div className="flex flex-wrap gap-2">
 																{aid.attachments.map((att) => (
-																	<a
+																	<MediaThumbnail
 																		key={att.id}
-																		href={att.media_url}
-																		target="_blank"
-																		rel="noreferrer"
-																		className="group relative size-16 overflow-hidden rounded-md border border-border bg-muted"
-																	>
-																		<video
-																			src={att.media_url}
-																			alt="Bukti Bantuan"
-																			className="h-full w-full object-cover transition-transform group-hover:scale-110"
-																		/>
-																	</a>
+																		src={att.media_url}
+																		mediaType={att.media_type}
+																		alt="Bukti Bantuan"
+																	/>
 																))}
 															</div>
 														</div>
@@ -358,7 +362,7 @@ function RouteComponent() {
 						{/* Right Column (Sidebar, 1 col) */}
 						<div className="space-y-6">
 							{/* Location & Map Card */}
-							<Card>
+							<Card className="overflow-hidden">
 								<CardHeader className="pb-3">
 									<CardTitle className="flex items-center gap-2 text-base font-semibold">
 										<MapPin className="size-4 text-primary" />
@@ -366,6 +370,51 @@ function RouteComponent() {
 									</CardTitle>
 								</CardHeader>
 								<CardContent className="space-y-3 text-sm">
+									{/* mapcn interactive map */}
+									{disaster.lat != null && disaster.lng != null && (
+										<div className="relative h-56 w-full overflow-hidden rounded-lg border border-border">
+											<Map
+												viewport={{
+													center: [disaster.lng, disaster.lat],
+													zoom: 14,
+												}}
+												className="h-full w-full"
+											>
+												<MapMarker
+													longitude={disaster.lng}
+													latitude={disaster.lat}
+												>
+													<MarkerContent>
+														<div className="relative flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-2 ring-background transition-transform hover:scale-110">
+															<MapPin className="size-4" />
+															<span className="absolute -top-1 -right-1 flex size-2.5">
+																<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+																<span className="relative inline-flex size-2.5 rounded-full bg-primary" />
+															</span>
+														</div>
+													</MarkerContent>
+													<MarkerPopup closeButton className="max-w-xs">
+														<div className="space-y-1">
+															<p className="font-semibold text-xs text-foreground">
+																{disaster.title}
+															</p>
+															<p className="text-[11px] text-muted-foreground">
+																{disaster.city ? `${disaster.city}, ` : ""}
+																{disaster.street || "Lokasi kejadian"}
+															</p>
+														</div>
+													</MarkerPopup>
+												</MapMarker>
+												<MapControls
+													position="bottom-right"
+													showZoom
+													showLocate
+													showCompass
+												/>
+											</Map>
+										</div>
+									)}
+
 									<div>
 										<p className="text-xs text-muted-foreground">
 											Kota / Kabupaten
