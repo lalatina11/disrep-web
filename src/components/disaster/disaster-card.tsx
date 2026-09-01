@@ -17,7 +17,9 @@ import { MediaRenderer } from "./media-renderer";
 
 export const DisasterCard = ({ report }: { report: DisasterReport }) => {
 	const { disaster, attachments, author, aids } = report;
-	const firstAttachment = attachments?.[0];
+	const firstAttachment = attachments?.filter((att) =>
+		att.media_type.startsWith("image"),
+	)?.[0];
 	const statusBadge = getStatusBadge(disaster.status);
 	const formattedDate = formatShortDate(disaster.created_at);
 

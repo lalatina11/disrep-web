@@ -7,6 +7,7 @@ import {
 } from "#/components/disaster/disaster-card";
 import MainLayout from "#/components/layouts/main-layout";
 import UnexpectedError from "#/components/templates/unexpected-error";
+import { Button } from "#/components/ui/button";
 import { getDisastersAction } from "#/lib/server-actions/disaster";
 import type { DisasterReport } from "#/lib/types/disaster-types";
 
@@ -69,7 +70,7 @@ function Home() {
 	return (
 		<MainLayout>
 			<main className="container mx-auto px-4 py-6">
-				<div className="mb-6 flex flex-col gap-1">
+				<div className="mb-6 flex flex-col gap-1 mr-auto bg-card p-3 rounded-md">
 					<h1 className="text-2xl font-bold tracking-tight text-foreground">
 						Laporan Bencana
 					</h1>
@@ -91,10 +92,15 @@ function Home() {
 						</p>
 					</div>
 				) : (
-					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
-						{reports.map((report) => (
-							<DisasterCard key={report.disaster.id} report={report} />
-						))}
+					<div className="flex flex-col">
+						<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 bg-card p-3 rounded-md">
+							{reports.map((report) => (
+								<DisasterCard key={report.disaster.id} report={report} />
+							))}
+						</div>
+						<div className="flex mt-3 justify-center items-center">
+							<Button>Lihat Selengkapnya</Button>
+						</div>
 					</div>
 				)}
 			</main>
