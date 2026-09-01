@@ -2,7 +2,8 @@ import z from "zod/v3";
 
 export const disasterAttachmentSchema = z.object({
 	media_url: z.string().min(1, "URL media wajib diisi"),
-	media_type: z.enum(["image", "video"]),
+	media_type: z.string().min(1, "Tipe media wajib diisi"),
+	media_preview: z.string().optional(),
 });
 
 export const createDisasterSchema = z.object({

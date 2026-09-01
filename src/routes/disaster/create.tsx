@@ -75,7 +75,16 @@ function CreateDisasterPage() {
 	const attachmentValue = watch("attachment");
 
 	const onSubmit = (data: CreateDisasterSchemaType) => {
-		createMutation.mutate(data, {
+		// Clean payload: strip temporary media_preview before sending to backend
+		const payload: CreateDisasterSchemaType = {
+			...data,
+			attachment: data.attachment.map(({ media_url, media_type }) => ({
+				media_url,
+				media_type,
+			})),
+		};
+
+		createMutation.mutate(payload, {
 			onSuccess: (result) => {
 				if (result && "id" in result) {
 					navigate({ to: "/disaster/$id", params: { id: result.id } });

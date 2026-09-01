@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/a11y/useMediaCaption: <explanation> */
 import {
 	Download,
 	ExternalLink,
@@ -21,9 +22,10 @@ import { cn } from "#/lib/utils";
 
 const VIDEO_EXTENSIONS = [".mp4", ".webm", ".ogg", ".mov", ".m4v", ".mkv"];
 
-export function isVideo(mediaType?: string, url?: string): boolean {
-	if (mediaType?.toLowerCase() === "video") return true;
-	if (mediaType?.toLowerCase() === "image") return false;
+export function isVideo(mediaType: string, url?: string): boolean {
+	const type = mediaType.toLowerCase();
+	if (type === "video") return true;
+	if (type === "image") return false;
 	if (url) {
 		const cleanUrl = url.split("?")[0].split("#")[0].toLowerCase();
 		return VIDEO_EXTENSIONS.some((ext) => cleanUrl.endsWith(ext));
@@ -35,7 +37,7 @@ interface MediaPreviewModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	src: string;
-	mediaType?: string;
+	mediaType: string;
 	title?: string;
 }
 
@@ -160,7 +162,7 @@ export function MediaPreviewModal({
 
 interface MediaRendererProps {
 	src: string;
-	mediaType?: string;
+	mediaType: string;
 	alt?: string;
 	className?: string;
 	controls?: boolean;
@@ -183,9 +185,8 @@ export function MediaRenderer({
 	showBadge = false,
 	enablePreview = true,
 }: MediaRendererProps) {
-	const [isFallbackVideo, setIsFallbackVideo] = useState(false);
 	const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-	const isVideoType = isVideo(mediaType, src) || isFallbackVideo;
+	const isVideoType = isVideo(mediaType, src);
 
 	return (
 		<>
@@ -216,7 +217,10 @@ export function MediaRenderer({
 						{enablePreview && (
 							<div className="absolute inset-0 flex items-center justify-center bg-black/20 transition-all duration-200 group-hover:bg-black/35">
 								<div className="flex size-11 items-center justify-center rounded-full bg-background/90 text-foreground shadow-lg backdrop-blur-xs transition-transform duration-200 group-hover:scale-110">
-									<Play className="size-5 translate-x-0.5 text-primary" fill="currentColor" />
+									<Play
+										className="size-5 translate-x-0.5 text-primary"
+										fill="currentColor"
+									/>
 								</div>
 							</div>
 						)}
@@ -228,11 +232,6 @@ export function MediaRenderer({
 							alt={alt}
 							loading="lazy"
 							className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-							onError={() => {
-								if (!mediaType) {
-									setIsFallbackVideo(true);
-								}
-							}}
 						/>
 						{enablePreview && (
 							<div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-200 group-hover:bg-black/25 group-hover:opacity-100">
@@ -283,7 +282,7 @@ export function MediaThumbnail({
 	className,
 }: {
 	src: string;
-	mediaType?: string;
+	mediaType: string;
 	alt?: string;
 	className?: string;
 }) {

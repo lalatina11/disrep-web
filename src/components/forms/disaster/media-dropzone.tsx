@@ -3,11 +3,14 @@ import {
 	Film,
 	Image as ImageIcon,
 	Loader2,
+	Maximize2,
+	Play,
 	Trash2,
 	UploadCloud,
 } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
+import { MediaPreviewModal } from "#/components/disaster/media-renderer";
 import { Badge } from "#/components/ui/badge";
 import { Button } from "#/components/ui/button";
 import { cn } from "#/lib/utils";
@@ -34,6 +37,15 @@ export function MediaDropzone({
 }: MediaDropzoneProps) {
 	const [isDragging, setIsDragging] = useState(false);
 	const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([]);
+	const [previewModal, setPreviewModal] = useState<{
+		isOpen: boolean;
+		src: string;
+		mediaType?: string;
+		title?: string;
+	}>({
+		isOpen: false,
+		src: "",
+	});
 
 	const valueRef = useRef(value);
 	valueRef.current = value;
@@ -74,6 +86,7 @@ export function MediaDropzone({
 			const uploadedAttachment: DisasterAttachmentType = {
 				media_url: result.data.media_url,
 				media_type: result.data.media_type || mediaType,
+				media_preview: result.data.media_preview || previewUrl,
 			};
 
 			onChangeRef.current([...valueRef.current, uploadedAttachment]);
@@ -87,7 +100,6 @@ export function MediaDropzone({
 						: "Terjadi kesalahan pada server",
 			});
 		} finally {
-			URL.revokeObjectURL(previewUrl);
 			setUploadingFiles((prev) => prev.filter((f) => f.id !== tempId));
 		}
 	}, []);
@@ -191,31 +203,55 @@ export function MediaDropzone({
 					{/* Completed Uploads */}
 					{value.map((att, idx) => {
 						const isVideo = att.media_type === "video";
-						const displayUrl = att.media_url.startsWith("http")
-							? att.media_url
-							: `${process.env.NEXT_PUBLIC_STORAGE_URL || ""}/${att.media_url}`;
+						const displayUrl = att.media_preview || att.media_url;
 
 						return (
 							<div
 								key={`uploaded-${idx}`}
-								className="group relative aspect-video overflow-hidden rounded-lg border border-border bg-muted"
+								className="group relative aspect-video cursor-pointer overflow-hidden rounded-lg border border-border bg-muted"
+								onClick={() =>
+									setPreviewModal({
+										isOpen: true,
+										src: displayUrl,
+										mediaType: att.media_type,
+										title: `Bukti ${idx + 1}`,
+									})
+								}
 							>
 								{isVideo ? (
-									<video
-										src={displayUrl}
-										className="h-full w-full object-cover"
-										muted
-										playsInline
-									/>
+									<>
+										<video
+											src={displayUrl}
+											className="h-full w-full object-cover"
+											muted
+											playsInline
+											preload="metadata"
+										/>
+										<div className="absolute inset-0 flex items-center justify-center bg-black/20 transition-all group-hover:bg-black/35">
+											<div className="flex size-8 items-center justify-center rounded-full bg-background/90 text-foreground shadow-md backdrop-blur-xs transition-transform group-hover:scale-110">
+												<Play
+													className="size-4 translate-x-0.5 text-primary"
+													fill="currentColor"
+												/>
+											</div>
+										</div>
+									</>
 								) : (
-									<img
-										src={displayUrl}
-										alt={`Bukti ${idx + 1}`}
-										className="h-full w-full object-cover"
-									/>
+									<>
+										<img
+											src={displayUrl}
+											alt={`Bukti ${idx + 1}`}
+											className="h-full w-full object-cover transition-transform group-hover:scale-105"
+										/>
+										<div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/25 group-hover:opacity-100">
+											<div className="flex size-8 items-center justify-center rounded-full bg-background/90 text-foreground shadow-md backdrop-blur-xs">
+												<Maximize2 className="size-4" />
+											</div>
+										</div>
+									</>
 								)}
 
-								<div className="absolute top-1.5 left-1.5">
+								<div className="absolute top-1.5 left-1.5 z-10">
 									<Badge
 										variant="secondary"
 										className="gap-1 bg-background/80 text-[10px] backdrop-blur-xs"
@@ -236,9 +272,12 @@ export function MediaDropzone({
 									type="button"
 									variant="destructive"
 									size="icon"
-									onClick={() => handleRemove(idx)}
+									onClick={(e) => {
+										e.stopPropagation();
+										handleRemove(idx);
+									}}
 									disabled={disabled}
-									className="absolute top-1.5 right-1.5 size-7 opacity-80 transition-opacity hover:opacity-100"
+									className="absolute top-1.5 right-1.5 z-10 size-7 opacity-80 transition-opacity hover:opacity-100"
 								>
 									<Trash2 className="size-3.5" />
 								</Button>
@@ -263,6 +302,15 @@ export function MediaDropzone({
 					))}
 				</div>
 			)}
+
+			{/* Full resolution popup preview modal */}
+			<MediaPreviewModal
+				isOpen={previewModal.isOpen}
+				onClose={() => setPreviewModal((prev) => ({ ...prev, isOpen: false }))}
+				src={previewModal.src}
+				mediaType={previewModal.mediaType}
+				title={previewModal.title}
+			/>
 		</div>
 	);
 }
