@@ -28,4 +28,5 @@ export * from "./enums";
 export interface FileUploadResult {
 	media_url: string;
 	media_type: string; // image or video
+	media_preview: string; // image or video
 }
