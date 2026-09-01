@@ -26,14 +26,6 @@ function RouteComponent() {
 		return (
 			<MainLayout>
 				<main className="container mx-auto px-4 py-6">
-					<div className="mb-6 flex flex-col gap-1">
-						<h1 className="text-2xl font-bold tracking-tight text-foreground">
-							Laporan Bencana
-						</h1>
-						<p className="text-sm text-muted-foreground">
-							Daftar laporan bencana dan status bantuan terkini
-						</p>
-					</div>
 					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
 						{Array.from({ length: 12 }).map((_, i) => (
 							// biome-ignore lint/suspicious/noArrayIndexKey: Static placeholder skeletons
@@ -65,15 +57,6 @@ function RouteComponent() {
 	return (
 		<MainLayout>
 			<main className="container mx-auto px-4 py-6">
-				<div className="mb-6 flex flex-col gap-1">
-					<h1 className="text-2xl font-bold tracking-tight text-foreground">
-						Laporan Bencana
-					</h1>
-					<p className="text-sm text-muted-foreground">
-						Daftar laporan bencana dan status bantuan terkini
-					</p>
-				</div>
-
 				{reports.length === 0 ? (
 					<div className="flex min-h-[40vh] flex-col items-center justify-center rounded-xl border border-dashed border-border p-8 text-center">
 						<div className="flex size-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
