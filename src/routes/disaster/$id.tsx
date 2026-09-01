@@ -13,6 +13,10 @@ import {
 	ShieldCheck,
 	User,
 } from "lucide-react";
+import {
+	MediaRenderer,
+	MediaThumbnail,
+} from "#/components/disaster/media-renderer";
 import MainLayout from "#/components/layouts/main-layout";
 import NotFound from "#/components/templates/not-found";
 import UnexpectedError from "#/components/templates/unexpected-error";
@@ -26,19 +30,15 @@ import {
 	CardHeader,
 	CardTitle,
 } from "#/components/ui/card";
-import { Separator } from "#/components/ui/separator";
-import { Skeleton } from "#/components/ui/skeleton";
 import {
-	Map,
+	Map as MapCN,
 	MapControls,
 	MapMarker,
 	MarkerContent,
 	MarkerPopup,
 } from "#/components/ui/map";
-import {
-	MediaRenderer,
-	MediaThumbnail,
-} from "#/components/disaster/media-renderer";
+import { Separator } from "#/components/ui/separator";
+import { Skeleton } from "#/components/ui/skeleton";
 import { formatDate, formatRupiah, getStatusBadge } from "#/lib/common";
 import { getDisasterByIdAction } from "#/lib/server-actions/disaster";
 import type { DisasterReport } from "#/lib/types";
@@ -379,7 +379,7 @@ function RouteComponent() {
 									{/* mapcn interactive map */}
 									{disaster.lat != null && disaster.lng != null && (
 										<div className="relative h-56 w-full overflow-hidden rounded-lg border border-border">
-											<Map
+											<MapCN
 												viewport={{
 													center: [disaster.lng, disaster.lat],
 													zoom: 14,
@@ -417,7 +417,7 @@ function RouteComponent() {
 													showLocate
 													showCompass
 												/>
-											</Map>
+											</MapCN>
 										</div>
 									)}
 
@@ -534,5 +534,3 @@ function RouteComponent() {
 		</MainLayout>
 	);
 }
-
-export default RouteComponent;

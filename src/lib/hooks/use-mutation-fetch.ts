@@ -1,7 +1,5 @@
-// hooks/use-mutation-fetch.ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import clientFetch from "#/lib/client-fetch";
-import type { ApiResponseType } from "#/lib/types";
 
 type HttpMethod = "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -9,7 +7,7 @@ interface MutationOptions<TData, TVariables> {
 	method: HttpMethod;
 	path: string | ((variables: TVariables) => string); // ← support dynamic paths
 	invalidates?: string[]; // ← queryKeys to invalidate after success
-	onSuccess?: (data: ApiResponseType<TData>) => void;
+	onSuccess?: (data: TData) => void;
 	onError?: (error: Error) => void;
 }
 
