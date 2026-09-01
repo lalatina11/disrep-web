@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { LogIn } from "lucide-react";
 import useUserStore from "#/lib/stores/use-user-store";
+import { ModeToggle } from "../mode-toggle";
 import { Button } from "../ui/button";
 import UserDropdown from "../user-dropdown";
 
@@ -15,7 +16,10 @@ const MainNavbar = () => {
 				</h2>
 			</Link>
 			{user ? (
-				<UserDropdown />
+				<div className="flex gap-2 items-center">
+					<ModeToggle />
+					<UserDropdown />
+				</div>
 			) : (
 				<Button asChild>
 					<Link to="/auth/sign-in">
