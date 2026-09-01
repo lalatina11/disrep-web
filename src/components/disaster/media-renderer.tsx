@@ -70,7 +70,10 @@ export function MediaRenderer({
 
 			{showBadge && (
 				<div className="pointer-events-none absolute bottom-2 left-2 z-10">
-					<Badge variant="secondary" className="gap-1 bg-background/80 text-[10px] backdrop-blur-xs">
+					<Badge
+						variant="secondary"
+						className="gap-1 bg-background/80 text-[10px] backdrop-blur-xs"
+					>
 						{isVideoType ? (
 							<>
 								<Film className="size-3" /> Video
@@ -110,13 +113,17 @@ export function MediaThumbnail({
 		>
 			{isVideoType ? (
 				<div className="relative flex h-full w-full items-center justify-center bg-muted">
+					{/** biome-ignore lint/a11y/useMediaCaption: <explanation> */}
 					<video
 						src={src}
 						preload="metadata"
 						className="h-full w-full object-cover opacity-80 group-hover:opacity-100"
 					/>
 					<div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-black/10">
-						<Play className="size-5 text-white drop-shadow-sm" fill="currentColor" />
+						<Play
+							className="size-5 text-white drop-shadow-sm"
+							fill="currentColor"
+						/>
 					</div>
 				</div>
 			) : (
