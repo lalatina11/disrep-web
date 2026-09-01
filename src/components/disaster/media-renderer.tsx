@@ -192,47 +192,56 @@ export function MediaRenderer({
 			<div
 				className={cn(
 					"group relative h-full w-full overflow-hidden",
-					enablePreview && !isVideoType && "cursor-pointer",
+					enablePreview && "cursor-pointer",
 					className,
 				)}
 				onClick={() => {
-					if (enablePreview && !isVideoType) {
+					if (enablePreview) {
 						setIsPreviewOpen(true);
 					}
 				}}
 			>
 				{isVideoType ? (
-					<video
-						src={src}
-						controls={controls}
-						autoPlay={autoPlay}
-						muted={muted}
-						loop={loop}
-						playsInline
-						preload="metadata"
-						className="h-full w-full object-cover"
-					/>
+					<>
+						<video
+							src={src}
+							controls={!enablePreview && controls}
+							autoPlay={autoPlay}
+							muted={muted}
+							loop={loop}
+							playsInline
+							preload="metadata"
+							className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+						/>
+						{enablePreview && (
+							<div className="absolute inset-0 flex items-center justify-center bg-black/20 transition-all duration-200 group-hover:bg-black/35">
+								<div className="flex size-11 items-center justify-center rounded-full bg-background/90 text-foreground shadow-lg backdrop-blur-xs transition-transform duration-200 group-hover:scale-110">
+									<Play className="size-5 translate-x-0.5 text-primary" fill="currentColor" />
+								</div>
+							</div>
+						)}
+					</>
 				) : (
-					<img
-						src={src}
-						alt={alt}
-						loading="lazy"
-						className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-						onError={() => {
-							if (!mediaType) {
-								setIsFallbackVideo(true);
-							}
-						}}
-					/>
-				)}
-
-				{/* Hover preview zoom button for images */}
-				{enablePreview && !isVideoType && (
-					<div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-200 group-hover:bg-black/25 group-hover:opacity-100">
-						<div className="flex size-9 items-center justify-center rounded-full bg-background/90 text-foreground shadow-lg backdrop-blur-xs">
-							<Maximize2 className="size-4" />
-						</div>
-					</div>
+					<>
+						<img
+							src={src}
+							alt={alt}
+							loading="lazy"
+							className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+							onError={() => {
+								if (!mediaType) {
+									setIsFallbackVideo(true);
+								}
+							}}
+						/>
+						{enablePreview && (
+							<div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-200 group-hover:bg-black/25 group-hover:opacity-100">
+								<div className="flex size-9 items-center justify-center rounded-full bg-background/90 text-foreground shadow-lg backdrop-blur-xs">
+									<Maximize2 className="size-4" />
+								</div>
+							</div>
+						)}
+					</>
 				)}
 
 				{showBadge && (

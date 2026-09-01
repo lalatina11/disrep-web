@@ -6,7 +6,7 @@ import {
 	Trash2,
 	UploadCloud,
 } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "#/components/ui/badge";
 import { Button } from "#/components/ui/button";
@@ -35,7 +35,12 @@ export function MediaDropzone({
 	const [isDragging, setIsDragging] = useState(false);
 	const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([]);
 
-	const uploadFile = async (file: File) => {
+	const valueRef = useRef(value);
+	valueRef.current = value;
+	const onChangeRef = useRef(onChange);
+	onChangeRef.current = onChange;
+
+	const uploadFile = useCallback(async (file: File) => {
 		const tempId = crypto.randomUUID();
 		const isVideo = file.type.startsWith("video");
 		const mediaType: "image" | "video" = isVideo ? "video" : "image";
@@ -71,7 +76,7 @@ export function MediaDropzone({
 				media_type: result.data.media_type || mediaType,
 			};
 
-			onChange([...value, uploadedAttachment]);
+			onChangeRef.current([...valueRef.current, uploadedAttachment]);
 			toast.success(`Berhasil mengunggah ${file.name}`);
 		} catch (error) {
 			console.error("Upload error:", error);
@@ -85,7 +90,7 @@ export function MediaDropzone({
 			URL.revokeObjectURL(previewUrl);
 			setUploadingFiles((prev) => prev.filter((f) => f.id !== tempId));
 		}
-	};
+	}, []);
 
 	const handleFiles = useCallback(
 		(files: FileList | null) => {
@@ -112,7 +117,7 @@ export function MediaDropzone({
 				uploadFile(file);
 			}
 		},
-		[disabled, value],
+		[disabled, uploadFile],
 	);
 
 	const handleDragOver = (e: React.DragEvent) => {
