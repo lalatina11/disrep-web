@@ -40,11 +40,12 @@ export function MediaDropzone({
 	const [previewModal, setPreviewModal] = useState<{
 		isOpen: boolean;
 		src: string;
-		mediaType?: string;
+		mediaType: string;
 		title?: string;
 	}>({
 		isOpen: false,
 		src: "",
+		mediaType: "",
 	});
 
 	const valueRef = useRef(value);
