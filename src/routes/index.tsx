@@ -7,15 +7,23 @@ import {
 } from "#/components/disaster/disaster-card";
 import MainLayout from "#/components/layouts/main-layout";
 import UnexpectedError from "#/components/templates/unexpected-error";
+import { getDisastersAction } from "#/lib/server-actions/disaster";
 import type { DisasterReport } from "#/lib/types/disaster-types";
 
-export const Route = createFileRoute("/")({ component: Home });
+export const Route = createFileRoute("/")({
+	loader: async () => {
+		return getDisastersAction();
+	},
+	component: Home,
+});
 
 function Home() {
+	const initialData = Route.useLoaderData();
 	const { data, isLoading, isError, error, refetch } = useQuery<
 		Array<DisasterReport>
 	>({
 		queryKey: ["disaster"],
+		initialData,
 	});
 
 	if (isLoading) {

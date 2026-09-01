@@ -40,9 +40,13 @@ import {
 	MediaThumbnail,
 } from "#/components/disaster/media-renderer";
 import { formatDate, formatRupiah, getStatusBadge } from "#/lib/common";
+import { getDisasterByIdAction } from "#/lib/server-actions/disaster";
 import type { DisasterReport } from "#/lib/types";
 
 export const Route = createFileRoute("/disaster/$id")({
+	loader: async ({ params }) => {
+		return getDisasterByIdAction({ data: params.id });
+	},
 	component: RouteComponent,
 });
 
@@ -118,11 +122,13 @@ function DisasterDetailSkeleton() {
 }
 
 function RouteComponent() {
+	const initialData = Route.useLoaderData();
 	const params = Route.useParams();
 
 	const { data, isLoading, isError, error, refetch } = useQuery<DisasterReport>(
 		{
 			queryKey: [`disaster/${params.id}`],
+			initialData: initialData ?? undefined,
 		},
 	);
 
