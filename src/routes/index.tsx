@@ -72,7 +72,7 @@ function Home() {
 			<main className="container mx-auto px-4 py-6">
 				<div className="mb-6 flex flex-col gap-1 mr-auto bg-card p-3 rounded-md">
 					<h1 className="text-2xl font-bold tracking-tight text-foreground">
-						Laporan Bencana
+						Laporan Bencana Terkini
 					</h1>
 					<p className="text-sm text-muted-foreground">
 						Daftar laporan bencana dan status bantuan terkini
