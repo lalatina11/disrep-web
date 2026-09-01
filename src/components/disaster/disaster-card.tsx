@@ -34,6 +34,7 @@ export const DisasterCard = ({ report }: { report: DisasterReport }) => {
 							alt={disaster.title}
 							controls={false}
 							showBadge
+							enablePreview={false}
 						/>
 					) : (
 						<div className="flex h-full w-full items-center justify-center text-muted-foreground">
