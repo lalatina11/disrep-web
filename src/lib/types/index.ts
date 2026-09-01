@@ -24,3 +24,8 @@ export interface AuthResponseType {
 
 export * from "./disaster-types";
 export * from "./enums";
+
+export interface FileUploadResult {
+	media_url: string;
+	media_type: string; // image or video
+}
