@@ -17,9 +17,9 @@ export interface Disaster {
 	updated_at: string;
 }
 
-
 export interface DisasterAttachment {
 	media_url: string;
+	media_type: string; //"image" or "video"
 }
 
 export interface DisasterAuthor {
@@ -45,6 +45,7 @@ export interface DisasterAidAttachment {
 	id: string;
 	disaster_report_aid_id: string;
 	media_url: string;
+	media_type: string; //"image" or "video"
 }
 
 export interface DisasterAid {
@@ -60,4 +61,3 @@ export interface DisasterReport {
 	author: DisasterAuthor;
 	aids: DisasterAid[];
 }
-
