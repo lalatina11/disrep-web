@@ -46,7 +46,7 @@ const UserDropdown = () => {
 				<Separator className="my-2" />
 				<div className="flex flex-col gap-1">
 					<Button variant={"secondary"} asChild className="w-full">
-						<Link to="/">
+						<Link to="/disaster/create">
 							<Plus />
 							Laporkan Banjir
 						</Link>
