@@ -98,11 +98,7 @@ export function MapPicker({
 						</MarkerContent>
 					</MapMarker>
 
-					<MapControls
-						position="bottom-right"
-						showZoom
-						showCompass
-					/>
+					<MapControls position="bottom-right" showZoom showCompass />
 				</MapCN>
 			</div>
 

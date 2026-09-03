@@ -51,7 +51,14 @@ export const Route = createFileRoute("/disaster/create")({
 
 function CreateDisasterPage() {
 	const navigate = useNavigate();
-	const createMutation = useCreateDisasterMutation();
+	const createMutation = useCreateDisasterMutation({
+		onSuccess: (disaster) => {
+			if (disaster.status !== "pending") {
+				return navigate({ to: "/disaster/$id", params: { id: disaster.id } });
+			}
+			return navigate({ to: "/" });
+		},
+	});
 
 	const {
 		register,
@@ -201,7 +208,10 @@ function CreateDisasterPage() {
 				await applyLocationData(currentLat, currentLng, undefined, "GPS");
 			},
 			async (err) => {
-				console.warn("Browser GPS unavailable, falling back to IP Geolocation:", err);
+				console.warn(
+					"Browser GPS unavailable, falling back to IP Geolocation:",
+					err,
+				);
 				const ipSuccess = await fetchLocationByIp();
 				setIsLocating(false);
 				if (!ipSuccess) {
@@ -369,7 +379,9 @@ function CreateDisasterPage() {
 									{/* Coordinate Input Fields */}
 									<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 										<Field>
-											<FieldLabel htmlFor="lat">Latitude (Garis Lintang) *</FieldLabel>
+											<FieldLabel htmlFor="lat">
+												Latitude (Garis Lintang) *
+											</FieldLabel>
 											<Input
 												id="lat"
 												type="number"
@@ -388,7 +400,9 @@ function CreateDisasterPage() {
 										</Field>
 
 										<Field>
-											<FieldLabel htmlFor="lng">Longitude (Garis Bujur) *</FieldLabel>
+											<FieldLabel htmlFor="lng">
+												Longitude (Garis Bujur) *
+											</FieldLabel>
 											<Input
 												id="lng"
 												type="number"

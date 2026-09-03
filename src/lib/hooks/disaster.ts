@@ -1,27 +1,36 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import clientFetch from "../client-fetch";
-import queryClient from "../query-client";
+import queryClient, { type MutationConfig } from "../query-client";
 import type { DisasterReport } from "../types";
 import type {
 	CreateDisasterSchemaType,
 	UpdateDisasterStatusSchemaType,
 } from "../validations/disaster";
 
-export const useCreateDisasterMutation = () => {
+export const useCreateDisasterMutation = (
+	config?: MutationConfig<
+		(data: CreateDisasterSchemaType) => Promise<DisasterReport["disaster"]>
+	>,
+) => {
 	return useMutation({
+		...config,
 		mutationFn: (data: CreateDisasterSchemaType) => {
 			return clientFetch<DisasterReport["disaster"]>("disaster", "POST", data);
 		},
-		onSuccess: ({ status }) => {
+		onSuccess: (data, variables, onMutateResult, context) => {
 			queryClient.invalidateQueries({ queryKey: ["disaster"] });
 			toast.success("Laporan bencana berhasil dibuat", {
 				description:
-					status === "pending" ? "Laporanmu akan ditinjau admin" : undefined,
+					data.status === "pending"
+						? "Laporanmu akan ditinjau admin"
+						: undefined,
 			});
+			config?.onSuccess?.(data, variables, onMutateResult, context);
 		},
-		onError: () => {
+		onError: (error, variables, onMutateResult, context) => {
 			toast.error("Gagal melaporkan bencana alam");
+			config?.onError?.(error, variables, onMutateResult, context);
 		},
 	});
 };

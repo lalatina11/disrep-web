@@ -19,8 +19,8 @@ import useUserStore from "#/lib/stores/use-user-store";
 import { DisasterStatus, type DisasterStatusType } from "#/lib/types/enums";
 import { cn } from "#/lib/utils";
 import {
-	updateDisasterStatusSchema,
 	type UpdateDisasterStatusSchemaType,
+	updateDisasterStatusSchema,
 } from "#/lib/validations/disaster";
 
 interface UpdateDisasterStatusDialogProps {
