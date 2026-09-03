@@ -61,3 +61,25 @@ export const useUpdateDisasterStatusMutation = () => {
 		},
 	});
 };
+
+export const useDeleteDisasterMutation = (afterDeletionFn: () => void) => {
+	return useMutation({
+		mutationFn: ({ disasterId }: { disasterId: string }) => {
+			return clientFetch(`disaster/${disasterId}`, "DELETE");
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ["disaster"],
+			});
+			toast.success("Berhasil menghapus data bencana");
+			afterDeletionFn();
+		},
+		onError: (error) => {
+			console.log({ error });
+
+			toast.error(
+				error instanceof Error ? error.message : "Gagal menghapus data bencana",
+			);
+		},
+	});
+};
