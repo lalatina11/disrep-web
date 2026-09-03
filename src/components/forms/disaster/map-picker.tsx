@@ -1,8 +1,6 @@
-import { Locate, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import type * as MapLibreGL from "maplibre-gl";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { Button } from "#/components/ui/button";
 import {
 	Map as MapCN,
 	MapControls,
@@ -25,7 +23,6 @@ export function MapPicker({
 	disabled = false,
 }: MapPickerProps) {
 	const [mapRef, setMapRef] = useState<MapRef | null>(null);
-	const [isLocating, setIsLocating] = useState(false);
 
 	useEffect(() => {
 		if (!mapRef) return;
@@ -45,55 +42,28 @@ export function MapPicker({
 		};
 	}, [mapRef, disabled, onChange]);
 
-	const handleCurrentLocation = () => {
-		if (!("geolocation" in navigator)) {
-			toast.error("Geolokasi tidak didukung oleh browser Anda");
-			return;
-		}
-
-		setIsLocating(true);
-		navigator.geolocation.getCurrentPosition(
-			(pos) => {
-				const newLat = Number(pos.coords.latitude.toFixed(7));
-				const newLng = Number(pos.coords.longitude.toFixed(7));
-				onChange({ lat: newLat, lng: newLng });
-				mapRef?.flyTo({
-					center: [newLng, newLat],
+	// Auto-center map when coordinates change
+	useEffect(() => {
+		if (mapRef && lat && lng) {
+			const center = mapRef.getCenter();
+			const diff = Math.abs(center.lat - lat) + Math.abs(center.lng - lng);
+			if (diff > 0.0001) {
+				mapRef.flyTo({
+					center: [lng, lat],
 					zoom: 15,
-					duration: 1200,
+					duration: 1000,
 				});
-				setIsLocating(false);
-				toast.success("Berhasil menemukan lokasi Anda");
-			},
-			(err) => {
-				console.error("Geolocation error:", err);
-				setIsLocating(false);
-				toast.error("Gagal mendapatkan lokasi saat ini");
-			},
-			{ timeout: 10000, enableHighAccuracy: true },
-		);
-	};
+			}
+		}
+	}, [mapRef, lat, lng]);
 
 	return (
 		<div className="space-y-2">
-			<div className="flex flex-wrap items-center justify-between gap-2">
-				<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-					<MapPin className="size-3.5 text-primary" />
-					<span>
-						Klik pada peta atau geser pin untuk menentukan titik bencana
-					</span>
-				</div>
-				<Button
-					type="button"
-					variant="outline"
-					size="sm"
-					onClick={handleCurrentLocation}
-					disabled={disabled || isLocating}
-					className="h-7 text-xs"
-				>
-					<Locate className="size-3.5" />
-					{isLocating ? "Mencari lokasi..." : "Lokasi Saya"}
-				</Button>
+			<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+				<MapPin className="size-3.5 text-primary" />
+				<span>
+					Klik pada peta atau geser pin untuk menentukan titik koordinat bencana
+				</span>
 			</div>
 
 			{/* Map Container */}
@@ -131,14 +101,7 @@ export function MapPicker({
 					<MapControls
 						position="bottom-right"
 						showZoom
-						showLocate
 						showCompass
-						onLocate={(coords) => {
-							onChange({
-								lat: Number(coords.latitude.toFixed(7)),
-								lng: Number(coords.longitude.toFixed(7)),
-							});
-						}}
 					/>
 				</MapCN>
 			</div>
@@ -146,7 +109,7 @@ export function MapPicker({
 			{/* Coordinates info row */}
 			<div className="flex items-center justify-between rounded-md bg-muted/40 px-3 py-1.5 text-xs text-muted-foreground">
 				<span>Koordinat Terpilih:</span>
-				<span className="font-mono text-foreground font-medium">
+				<span className="font-mono font-medium text-foreground">
 					{lat || "-"}, {lng || "-"}
 				</span>
 			</div>

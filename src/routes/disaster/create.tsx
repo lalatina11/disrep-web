@@ -6,11 +6,15 @@ import {
 	Eye,
 	EyeOff,
 	Info,
+	Loader2,
+	Locate,
 	MapPin,
 	Send,
 	Upload,
 } from "lucide-react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { MapPicker } from "#/components/forms/disaster/map-picker";
 import { MediaDropzone } from "#/components/forms/disaster/media-dropzone";
 import MainLayout from "#/components/layouts/main-layout";
@@ -54,6 +58,7 @@ function CreateDisasterPage() {
 		handleSubmit,
 		control,
 		setValue,
+		getValues,
 		watch,
 		formState: { errors, isSubmitting },
 	} = useForm<CreateDisasterSchemaType>({
@@ -70,10 +75,147 @@ function CreateDisasterPage() {
 		},
 	});
 
+	const [isLocating, setIsLocating] = useState(false);
+
 	const isAnon = watch("is_anon");
 	const latValue = watch("lat");
 	const lngValue = watch("lng");
 	const attachmentValue = watch("attachment");
+
+	const applyLocationData = async (
+		currentLat: number,
+		currentLng: number,
+		fallbackCity?: string,
+		source = "GPS",
+	) => {
+		setValue("lat", currentLat, { shouldValidate: true });
+		setValue("lng", currentLng, { shouldValidate: true });
+		setIsLocating(false);
+
+		let detectedCity = fallbackCity || "";
+		let detectedRoad = "";
+
+		// Reverse geocoding via OpenStreetMap Nominatim
+		try {
+			const res = await fetch(
+				`https://nominatim.openstreetmap.org/reverse?lat=${currentLat}&lon=${currentLng}&format=json`,
+			);
+			if (res.ok) {
+				const geoData = await res.json();
+				const addr = geoData.address;
+				detectedCity =
+					addr?.city ||
+					addr?.town ||
+					addr?.municipality ||
+					addr?.county ||
+					addr?.state_district ||
+					fallbackCity ||
+					"";
+				detectedRoad =
+					addr?.road ||
+					addr?.neighbourhood ||
+					addr?.suburb ||
+					addr?.village ||
+					"";
+
+				if (detectedCity && !getValues("city")) {
+					setValue("city", detectedCity, { shouldValidate: true });
+				}
+				if (detectedRoad && !getValues("street")) {
+					setValue("street", detectedRoad, { shouldValidate: true });
+				}
+			}
+		} catch (error) {
+			console.warn("Reverse geocoding error:", error);
+			if (fallbackCity && !getValues("city")) {
+				setValue("city", fallbackCity, { shouldValidate: true });
+			}
+		}
+
+		toast.success(`Lokasi berhasil diterapkan (${source})`, {
+			description: `${detectedCity ? `${detectedCity} • ` : ""}${currentLat}, ${currentLng}`,
+		});
+	};
+
+	const fetchLocationByIp = async (): Promise<boolean> => {
+		try {
+			// Try ipapi.co first
+			try {
+				const res = await fetch("https://ipapi.co/json/");
+				if (res.ok) {
+					const data = await res.json();
+					if (data.latitude && data.longitude) {
+						await applyLocationData(
+							Number(data.latitude.toFixed(7)),
+							Number(data.longitude.toFixed(7)),
+							data.city,
+							"IP Geolocation",
+						);
+						return true;
+					}
+				}
+			} catch {
+				// Continue to fallback
+			}
+
+			// Fallback: ipwho.is
+			const res2 = await fetch("https://ipwho.is/");
+			if (res2.ok) {
+				const data2 = await res2.json();
+				if (data2.success && data2.latitude && data2.longitude) {
+					await applyLocationData(
+						Number(data2.latitude.toFixed(7)),
+						Number(data2.longitude.toFixed(7)),
+						data2.city,
+						"IP Geolocation",
+					);
+					return true;
+				}
+			}
+
+			return false;
+		} catch (error) {
+			console.error("IP lookup error:", error);
+			return false;
+		}
+	};
+
+	const handleUseCurrentLocation = () => {
+		setIsLocating(true);
+
+		if (!("geolocation" in navigator)) {
+			fetchLocationByIp().then((success) => {
+				setIsLocating(false);
+				if (!success) {
+					toast.error("Geolokasi dan IP lookup tidak tersedia");
+				}
+			});
+			return;
+		}
+
+		// Try browser geolocation with standard timeout, seamlessly fallback to IP
+		navigator.geolocation.getCurrentPosition(
+			async (pos) => {
+				const currentLat = Number(pos.coords.latitude.toFixed(7));
+				const currentLng = Number(pos.coords.longitude.toFixed(7));
+				await applyLocationData(currentLat, currentLng, undefined, "GPS");
+			},
+			async (err) => {
+				console.warn("Browser GPS unavailable, falling back to IP Geolocation:", err);
+				const ipSuccess = await fetchLocationByIp();
+				setIsLocating(false);
+				if (!ipSuccess) {
+					toast.error("Gagal mendeteksi lokasi saat ini", {
+						description:
+							err.code === 1
+								? "Izin akses lokasi ditolak oleh peramban."
+								: "Tidak dapat mendeteksi lokasi melalui GPS maupun alamat IP jaringan.",
+					});
+				}
+			},
+			{ timeout: 7000, enableHighAccuracy: false },
+		);
+	};
 
 	const onSubmit = (data: CreateDisasterSchemaType) => {
 		// Clean payload: strip temporary media_preview before sending to backend
@@ -167,9 +309,31 @@ function CreateDisasterPage() {
 
 								{/* Informasi Lokasi (Kota & Alamat) */}
 								<div className="space-y-4">
-									<div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-										<MapPin className="size-4 text-primary" />
-										<span>Lokasi Kejadian</span>
+									<div className="flex flex-wrap items-center justify-between gap-2">
+										<div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+											<MapPin className="size-4 text-primary" />
+											<span>Lokasi Kejadian</span>
+										</div>
+										<Button
+											type="button"
+											variant="outline"
+											size="sm"
+											disabled={isLoading || isLocating}
+											onClick={handleUseCurrentLocation}
+											className="h-8 gap-1.5 text-xs font-medium"
+										>
+											{isLocating ? (
+												<>
+													<Loader2 className="size-3.5 animate-spin text-primary" />
+													<span>Mendeteksi Lokasi...</span>
+												</>
+											) : (
+												<>
+													<Locate className="size-3.5 text-primary" />
+													<span>Gunakan Lokasi Saya Saat Ini</span>
+												</>
+											)}
+										</Button>
 									</div>
 
 									<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -199,6 +363,47 @@ function CreateDisasterPage() {
 											<FieldError
 												errors={[{ message: errors.street?.message }]}
 											/>
+										</Field>
+									</div>
+
+									{/* Coordinate Input Fields */}
+									<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+										<Field>
+											<FieldLabel htmlFor="lat">Latitude (Garis Lintang) *</FieldLabel>
+											<Input
+												id="lat"
+												type="number"
+												step="any"
+												value={latValue}
+												disabled={isLoading}
+												onChange={(e) => {
+													const val = Number.parseFloat(e.target.value);
+													if (!Number.isNaN(val)) {
+														setValue("lat", val, { shouldValidate: true });
+													}
+												}}
+												placeholder="-7.4243772"
+											/>
+											<FieldError errors={[{ message: errors.lat?.message }]} />
+										</Field>
+
+										<Field>
+											<FieldLabel htmlFor="lng">Longitude (Garis Bujur) *</FieldLabel>
+											<Input
+												id="lng"
+												type="number"
+												step="any"
+												value={lngValue}
+												disabled={isLoading}
+												onChange={(e) => {
+													const val = Number.parseFloat(e.target.value);
+													if (!Number.isNaN(val)) {
+														setValue("lng", val, { shouldValidate: true });
+													}
+												}}
+												placeholder="109.2301616"
+											/>
+											<FieldError errors={[{ message: errors.lng?.message }]} />
 										</Field>
 									</div>
 
