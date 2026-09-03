@@ -17,7 +17,7 @@ export const useCreateDisasterMutation = () => {
 			queryClient.invalidateQueries({ queryKey: ["disaster"] });
 			toast.success("Laporan bencana berhasil dibuat", {
 				description:
-					status === "new" ? "Laporanmu akan ditinjau admin" : undefined,
+					status === "pending" ? "Laporanmu akan ditinjau admin" : undefined,
 			});
 		},
 		onError: () => {
