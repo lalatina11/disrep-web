@@ -1,4 +1,5 @@
 import z from "zod/v3";
+import { DISASTER_STATUS_LIST } from "../types";
 
 export const disasterAttachmentSchema = z.object({
 	media_url: z.string().min(1, "URL media wajib diisi"),
@@ -11,9 +12,7 @@ export const createDisasterSchema = z.object({
 		.string()
 		.min(3, "Judul laporan minimal 3 karakter")
 		.max(150, "Judul laporan maksimal 150 karakter"),
-	description: z
-		.string()
-		.min(10, "Deskripsi laporan minimal 10 karakter"),
+	description: z.string().min(10, "Deskripsi laporan minimal 10 karakter"),
 	city: z.string().min(2, "Kota/Kabupaten wajib diisi"),
 	street: z.string().min(3, "Alamat atau jalan wajib diisi"),
 	lat: z
@@ -32,3 +31,11 @@ export const createDisasterSchema = z.object({
 
 export type CreateDisasterSchemaType = z.infer<typeof createDisasterSchema>;
 export type DisasterAttachmentType = z.infer<typeof disasterAttachmentSchema>;
+
+export const updateDisasterStatusSchema = z.object({
+	status: z.enum(DISASTER_STATUS_LIST),
+});
+
+export type UpdateDisasterStatusSchemaType = z.infer<
+	typeof updateDisasterStatusSchema
+>;

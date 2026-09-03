@@ -3,7 +3,10 @@ import { toast } from "sonner";
 import clientFetch from "../client-fetch";
 import queryClient from "../query-client";
 import type { DisasterReport } from "../types";
-import type { CreateDisasterSchemaType } from "../validations/disaster";
+import type {
+	CreateDisasterSchemaType,
+	UpdateDisasterStatusSchemaType,
+} from "../validations/disaster";
 
 export const useCreateDisasterMutation = () => {
 	return useMutation({
@@ -19,6 +22,42 @@ export const useCreateDisasterMutation = () => {
 		},
 		onError: () => {
 			toast.error("Gagal melaporkan bencana alam");
+		},
+	});
+};
+
+export const useUpdateDisasterStatusMutation = () => {
+	return useMutation({
+		mutationFn: ({
+			disaster_id,
+			data,
+		}: {
+			disaster_id: string;
+			data: UpdateDisasterStatusSchemaType;
+		}) => {
+			return clientFetch<DisasterReport>(
+				`/disaster/${disaster_id}`,
+				"PATCH",
+				data,
+			);
+		},
+		onSuccess: (result) => {
+			queryClient.invalidateQueries({
+				queryKey: [`disaster/${result.disaster.id}`],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["disaster"],
+			});
+			toast.success("Berhasil mengubah status bencana");
+		},
+		onError: (error) => {
+			console.log({ error });
+
+			toast.error(
+				error instanceof Error
+					? error.message
+					: "Gagal mengubah status bencana",
+			);
 		},
 	});
 };

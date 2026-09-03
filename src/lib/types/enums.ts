@@ -21,7 +21,7 @@ export const DISASTER_STATUS_LIST: Array<DisasterStatus> = [
 	DisasterStatus.AID_DISPATCHED,
 	DisasterStatus.AID_ARRIVED,
 	DisasterStatus.RESOLVED,
-];
+] as const;
 
 export type DisasterStatusType =
 	| "pending"
