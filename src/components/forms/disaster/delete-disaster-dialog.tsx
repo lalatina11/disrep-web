@@ -31,12 +31,7 @@ export function DeleteDisasterDialog({
 	const [isOpen, setIsOpen] = useState(false);
 	const navigate = useNavigate();
 
-	const deleteMutation = useDeleteDisasterMutation({
-		onSuccess: () => {
-			setIsOpen(false);
-			navigate({ to: "/" });
-		},
-	});
+	const deleteMutation = useDeleteDisasterMutation();
 
 	// Admin authority gate
 	if (!isAdmin()) {
@@ -44,7 +39,15 @@ export function DeleteDisasterDialog({
 	}
 
 	const handleDelete = () => {
-		deleteMutation.mutate({ disasterId });
+		deleteMutation.mutate(
+			{ disasterId },
+			{
+				onSuccess: () => {
+					setIsOpen(false);
+					navigate({ to: "/" });
+				},
+			},
+		);
 	};
 
 	const isLoading = deleteMutation.isPending;

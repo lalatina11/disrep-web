@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import clientFetch from "../client-fetch";
-import queryClient, { type MutationConfig } from "../query-client";
+import queryClient from "../query-client";
 import type { DisasterReport } from "../types";
 import type {
 	CreateDisasterSchemaType,
@@ -64,19 +64,16 @@ export const useUpdateDisasterStatusMutation = () => {
 	});
 };
 
-export const useDeleteDisasterMutation = (
-	config?: MutationConfig<(data: { disasterId: string }) => Promise<void>>,
-) => {
+export const useDeleteDisasterMutation = () => {
 	return useMutation({
 		mutationFn: ({ disasterId }: { disasterId: string }) => {
 			return clientFetch(`disaster/${disasterId}`, "DELETE");
 		},
-		onSuccess: (_, variables, onMutateResult, context) => {
+		onSuccess: () => {
 			queryClient.invalidateQueries({
 				queryKey: ["disaster"],
 			});
 			toast.success("Berhasil menghapus data bencana");
-			config?.onSuccess?.(undefined, variables, onMutateResult, context);
 		},
 		onError: (error) => {
 			console.log({ error });
