@@ -174,7 +174,7 @@ function RouteComponent() {
 				<div className="mb-6">
 					<Button onClick={handleBack} variant="ghost" size="sm" asChild>
 						<ArrowLeft className="size-4" />
-						Kembali ke Beranda
+						Kembali
 					</Button>
 				</div>
 
