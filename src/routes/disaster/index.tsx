@@ -10,6 +10,9 @@ import UnexpectedError from "#/components/templates/unexpected-error";
 import type { DisasterReport } from "#/lib/types/disaster-types";
 
 export const Route = createFileRoute("/disaster/")({
+	head: () => ({
+		meta: [{ title: "Semua Informasi Bencana" }],
+	}),
 	component: RouteComponent,
 });
 

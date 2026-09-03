@@ -36,11 +36,12 @@ import { Spinner } from "#/components/ui/spinner";
 import { Textarea } from "#/components/ui/textarea";
 import { useCreateDisasterMutation } from "#/lib/hooks/disaster";
 import {
-	createDisasterSchema,
 	type CreateDisasterSchemaType,
+	createDisasterSchema,
 } from "#/lib/validations/disaster";
 
 export const Route = createFileRoute("/disaster/create")({
+	head: () => ({ meta: [{ title: "Buat Laporan Bencana" }] }),
 	component: CreateDisasterPage,
 });
 
@@ -121,7 +122,8 @@ function CreateDisasterPage() {
 								Buat Laporan Bencana Baru
 							</CardTitle>
 							<CardDescription>
-								Lengkapi informasi bencana, titik koordinat lokasi, dan unggah bukti foto/video kejadian.
+								Lengkapi informasi bencana, titik koordinat lokasi, dan unggah
+								bukti foto/video kejadian.
 							</CardDescription>
 						</CardHeader>
 
@@ -129,7 +131,9 @@ function CreateDisasterPage() {
 							<FieldGroup>
 								{/* Judul Laporan */}
 								<Field>
-									<FieldLabel htmlFor="title">Judul Laporan Bencana *</FieldLabel>
+									<FieldLabel htmlFor="title">
+										Judul Laporan Bencana *
+									</FieldLabel>
 									<Input
 										id="title"
 										placeholder="Contoh: Banjir Bandang di Kawasan Pemukiman Warga"
@@ -144,7 +148,9 @@ function CreateDisasterPage() {
 
 								{/* Deskripsi */}
 								<Field>
-									<FieldLabel htmlFor="description">Deskripsi Kejadian *</FieldLabel>
+									<FieldLabel htmlFor="description">
+										Deskripsi Kejadian *
+									</FieldLabel>
 									<Textarea
 										id="description"
 										rows={4}
@@ -152,7 +158,9 @@ function CreateDisasterPage() {
 										disabled={isLoading}
 										{...register("description")}
 									/>
-									<FieldError errors={[{ message: errors.description?.message }]} />
+									<FieldError
+										errors={[{ message: errors.description?.message }]}
+									/>
 								</Field>
 
 								<Separator />
@@ -173,18 +181,24 @@ function CreateDisasterPage() {
 												disabled={isLoading}
 												{...register("city")}
 											/>
-											<FieldError errors={[{ message: errors.city?.message }]} />
+											<FieldError
+												errors={[{ message: errors.city?.message }]}
+											/>
 										</Field>
 
 										<Field>
-											<FieldLabel htmlFor="street">Alamat Lengkap / Nama Jalan *</FieldLabel>
+											<FieldLabel htmlFor="street">
+												Alamat Lengkap / Nama Jalan *
+											</FieldLabel>
 											<Input
 												id="street"
 												placeholder="Contoh: Jalan Jenderal Sudirman No. 45"
 												disabled={isLoading}
 												{...register("street")}
 											/>
-											<FieldError errors={[{ message: errors.street?.message }]} />
+											<FieldError
+												errors={[{ message: errors.street?.message }]}
+											/>
 										</Field>
 									</div>
 
@@ -234,7 +248,9 @@ function CreateDisasterPage() {
 											/>
 										)}
 									/>
-									<FieldError errors={[{ message: errors.attachment?.message }]} />
+									<FieldError
+										errors={[{ message: errors.attachment?.message }]}
+									/>
 								</div>
 
 								<Separator />
@@ -251,7 +267,8 @@ function CreateDisasterPage() {
 											<span>Laporkan Secara Anonim</span>
 										</div>
 										<p className="text-xs text-muted-foreground">
-											Identitas nama dan profil akun Anda tidak akan ditampilkan kepada publik pada laporan ini.
+											Identitas nama dan profil akun Anda tidak akan ditampilkan
+											kepada publik pada laporan ini.
 										</p>
 									</div>
 
@@ -275,7 +292,9 @@ function CreateDisasterPage() {
 							<div className="flex items-start gap-2.5 rounded-lg border border-border/80 bg-card p-3.5 text-xs text-muted-foreground">
 								<Info className="size-4 shrink-0 text-primary" />
 								<p className="leading-relaxed">
-									Pastikan semua data yang dilaporkan akurat dan dapat dipertanggungjawabkan untuk mempercepat proses verifikasi dan penyaluran bantuan oleh relawan dan pihak terkait.
+									Pastikan semua data yang dilaporkan akurat dan dapat
+									dipertanggungjawabkan untuk mempercepat proses verifikasi dan
+									penyaluran bantuan oleh relawan dan pihak terkait.
 								</p>
 							</div>
 

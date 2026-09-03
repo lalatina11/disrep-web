@@ -46,6 +46,9 @@ import { formatDate, formatRupiah, getStatusBadge } from "#/lib/common";
 import type { DisasterReport } from "#/lib/types";
 
 export const Route = createFileRoute("/disaster/$id")({
+	head: (props) => ({
+		meta: [{ title: `Informasi Detail Bencana | ${props.params.id}` }],
+	}),
 	component: RouteComponent,
 });
 
