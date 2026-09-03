@@ -71,17 +71,19 @@ export const useUpdateDisasterStatusMutation = () => {
 	});
 };
 
-export const useDeleteDisasterMutation = (afterDeletionFn: () => void) => {
+export const useDeleteDisasterMutation = (
+	config?: MutationConfig<(data: { disasterId: string }) => Promise<void>>,
+) => {
 	return useMutation({
 		mutationFn: ({ disasterId }: { disasterId: string }) => {
 			return clientFetch(`disaster/${disasterId}`, "DELETE");
 		},
-		onSuccess: () => {
+		onSuccess: (_, variables, onMutateResult, context) => {
 			queryClient.invalidateQueries({
 				queryKey: ["disaster"],
 			});
 			toast.success("Berhasil menghapus data bencana");
-			afterDeletionFn();
+			config?.onSuccess?.(undefined, variables, onMutateResult, context);
 		},
 		onError: (error) => {
 			console.log({ error });
