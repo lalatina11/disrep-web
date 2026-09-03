@@ -45,7 +45,8 @@ const STATUS_OPTIONS: StatusOption[] = [
 	},
 	{
 		value: DisasterStatus.AID_DISPATCHED,
-		description: "Logistik atau relawan bantuan sedang dalam perjalanan ke lokasi",
+		description:
+			"Logistik atau relawan bantuan sedang dalam perjalanan ke lokasi",
 	},
 	{
 		value: DisasterStatus.AID_ARRIVED,
@@ -136,7 +137,8 @@ export function UpdateDisasterStatusDialog({
 						Perbarui Status Bencana
 					</DialogTitle>
 					<DialogDescription>
-						Pilih status terbaru untuk memperbarui progres penanganan bencana secara real-time.
+						Pilih status terbaru untuk memperbarui progres penanganan bencana
+						secara real-time.
 					</DialogDescription>
 				</DialogHeader>
 

@@ -43,10 +43,16 @@ const UserDropdown = () => {
 				</div>
 				<Separator className="my-2" />
 				<div className="flex flex-col gap-1">
+					<Button variant="outline" asChild className="w-full">
+						<Link to="/profile">
+							<User />
+							Profil Saya
+						</Link>
+					</Button>
 					<Button variant={"secondary"} asChild className="w-full">
 						<Link to="/disaster/create">
 							<Plus />
-							Laporkan Banjir
+							Laporkan Bencana
 						</Link>
 					</Button>
 					<SignOutForm className="w-full" />

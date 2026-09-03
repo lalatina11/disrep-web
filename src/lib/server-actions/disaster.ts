@@ -33,14 +33,17 @@ export const getDisasterByIdAction = createServerFn({ method: "GET" })
 	.handler(async ({ data: id }): Promise<DisasterReport | null> => {
 		const token = getCookie(CookieType.ACCESS_TOKEN) || "";
 		try {
-			const res = await fetch(`${process.env.API_BASE_URL}/api/disaster/${id}`, {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					accept: "application/json",
-					...(token ? { Authorization: `Bearer ${token}` } : {}),
+			const res = await fetch(
+				`${process.env.API_BASE_URL}/api/disaster/${id}`,
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						accept: "application/json",
+						...(token ? { Authorization: `Bearer ${token}` } : {}),
+					},
 				},
-			});
+			);
 
 			const response = (await res.json()) as ApiResponseType<DisasterReport>;
 			if (response.success && response.data) {
