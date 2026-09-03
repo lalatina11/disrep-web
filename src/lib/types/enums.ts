@@ -15,10 +15,17 @@ export enum DisasterStatus {
 	RESOLVED = "resolved",
 }
 
+export const DISASTER_STATUS_LIST: Array<DisasterStatus> = [
+	DisasterStatus.PENDING,
+	DisasterStatus.NEW,
+	DisasterStatus.AID_DISPATCHED,
+	DisasterStatus.AID_ARRIVED,
+	DisasterStatus.RESOLVED,
+];
+
 export type DisasterStatusType =
 	| "pending"
 	| "new"
 	| "aid_dispatched"
 	| "aid_arrived"
 	| "resolved";
-
