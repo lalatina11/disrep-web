@@ -113,9 +113,9 @@ export function MediaDropzone({
 			for (let i = 0; i < files.length; i++) {
 				const file = files[i];
 				if (file.type.startsWith("image/") || file.type.startsWith("video/")) {
-					// Max size limit: 50MB
-					if (file.size > 50 * 1024 * 1024) {
-						toast.error(`File ${file.name} melebihi batas 50MB`);
+					// Max size limit: 500MB
+					if (file.size > 500 * 1024 * 1024) {
+						toast.error(`File ${file.name} melebihi batas 500MB`);
 						continue;
 					}
 					validFiles.push(file);
@@ -193,7 +193,7 @@ export function MediaDropzone({
 						<span className="text-primary underline">pilih file</span>
 					</p>
 					<p className="text-xs text-muted-foreground">
-						Mendukung format PNG, JPG, WEBP, MP4, MOV (Maksimal 50MB per file)
+						Mendukung format PNG, JPG, WEBP, MP4, MOV (Maksimal 500MB per file)
 					</p>
 				</div>
 			</div>
