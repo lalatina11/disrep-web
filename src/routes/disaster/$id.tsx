@@ -172,7 +172,7 @@ function RouteComponent() {
 			<div className="container mx-auto max-w-5xl px-4 py-6">
 				{/* Back button */}
 				<div className="mb-6">
-					<Button onClick={handleBack} variant="ghost" size="sm" asChild>
+					<Button onClick={handleBack} variant="ghost" size="sm">
 						<ArrowLeft className="size-4" />
 						Kembali
 					</Button>
