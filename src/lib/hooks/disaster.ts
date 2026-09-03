@@ -17,5 +17,8 @@ export const useCreateDisasterMutation = () => {
 					status === "new" ? "Laporanmu akan ditinjau admin" : undefined,
 			});
 		},
+		onError: () => {
+			toast.error("Gagal melaporkan bencana alam");
+		},
 	});
 };

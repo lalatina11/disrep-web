@@ -17,6 +17,7 @@ import {
 	MediaRenderer,
 	MediaThumbnail,
 } from "#/components/disaster/media-renderer";
+import { CreateDisasterAidDialog } from "#/components/forms/disaster-aid/create-disaster-aid-dialog";
 import MainLayout from "#/components/layouts/main-layout";
 import NotFound from "#/components/templates/not-found";
 import UnexpectedError from "#/components/templates/unexpected-error";
@@ -268,9 +269,12 @@ function RouteComponent() {
 											<Package className="size-4 text-primary" />
 											Distribusi Bantuan
 										</CardTitle>
-										<Badge variant="secondary">
-											{aids?.length ?? 0} Paket Bantuan
-										</Badge>
+										<div className="flex items-center gap-2">
+											<CreateDisasterAidDialog disasterId={disaster.id} />
+											<Badge variant="secondary">
+												{aids?.length ?? 0} Paket Bantuan
+											</Badge>
+										</div>
 									</div>
 									<CardDescription>
 										Daftar logistik dan barang bantuan yang telah dialokasikan
