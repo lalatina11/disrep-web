@@ -36,7 +36,7 @@ export const useUpdateDisasterStatusMutation = () => {
 			data: UpdateDisasterStatusSchemaType;
 		}) => {
 			return clientFetch<DisasterReport>(
-				`/disaster/${disaster_id}`,
+				`disaster/${disaster_id}/status`,
 				"PATCH",
 				data,
 			);

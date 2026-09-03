@@ -17,6 +17,7 @@ import {
 	MediaRenderer,
 	MediaThumbnail,
 } from "#/components/disaster/media-renderer";
+import { UpdateDisasterStatusDialog } from "#/components/forms/disaster/update-disaster-status-dialog";
 import { CreateDisasterAidDialog } from "#/components/forms/disaster-aid/create-disaster-aid-dialog";
 import MainLayout from "#/components/layouts/main-layout";
 import NotFound from "#/components/templates/not-found";
@@ -181,6 +182,10 @@ function RouteComponent() {
 							<Badge variant={statusBadge.variant} className="text-xs">
 								{statusBadge.label}
 							</Badge>
+							<UpdateDisasterStatusDialog
+								disasterId={disaster.id}
+								currentStatus={disaster.status}
+							/>
 							{disaster.is_anon && (
 								<Badge variant="outline" className="flex items-center gap-1">
 									<EyeOff className="size-3" />

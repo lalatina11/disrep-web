@@ -15,7 +15,7 @@ export enum DisasterStatus {
 	RESOLVED = "resolved",
 }
 
-export const DISASTER_STATUS_LIST: Array<DisasterStatus> = [
+export const DISASTER_STATUS_LIST = [
 	DisasterStatus.PENDING,
 	DisasterStatus.NEW,
 	DisasterStatus.AID_DISPATCHED,
