@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { Plus, Shield, User } from "lucide-react";
-import { ADMIN_ROLES, type AdminRoleType } from "#/lib/constatns/user-role";
 import useUserStore from "#/lib/stores/use-user-store";
 import SignOutForm from "./forms/auth-form/sign-out-form";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -14,11 +13,9 @@ import {
 import { Separator } from "./ui/separator";
 
 const UserDropdown = () => {
-	const { user } = useUserStore();
+	const { user, isAdmin } = useUserStore();
 
 	if (!user) return null;
-
-	const isAdmin = ADMIN_ROLES.includes(user.role as AdminRoleType);
 
 	return (
 		<DropdownMenu>
@@ -36,7 +33,7 @@ const UserDropdown = () => {
 						</AvatarFallback>
 					</Avatar>
 					<div className="flex gap-1 items-center">
-						{isAdmin && (
+						{isAdmin() && (
 							<Badge>
 								<Shield />
 							</Badge>
