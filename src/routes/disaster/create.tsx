@@ -51,14 +51,7 @@ export const Route = createFileRoute("/disaster/create")({
 
 function CreateDisasterPage() {
 	const navigate = useNavigate();
-	const createMutation = useCreateDisasterMutation({
-		onSuccess: (disaster) => {
-			if (disaster.status !== "pending") {
-				return navigate({ to: "/disaster/$id", params: { id: disaster.id } });
-			}
-			return navigate({ to: "/" });
-		},
-	});
+	const createMutation = useCreateDisasterMutation();
 
 	const {
 		register,
@@ -238,12 +231,11 @@ function CreateDisasterPage() {
 		};
 
 		createMutation.mutate(payload, {
-			onSuccess: (result) => {
-				if (result && "id" in result) {
-					navigate({ to: "/disaster/$id", params: { id: result.id } });
-				} else {
-					navigate({ to: "/" });
+			onSuccess: (disaster) => {
+				if (disaster.status !== "pending") {
+					return navigate({ to: "/disaster/$id", params: { id: disaster.id } });
 				}
+				return navigate({ to: "/" });
 			},
 		});
 	};

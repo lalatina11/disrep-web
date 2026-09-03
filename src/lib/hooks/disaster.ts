@@ -8,17 +8,12 @@ import type {
 	UpdateDisasterStatusSchemaType,
 } from "../validations/disaster";
 
-export const useCreateDisasterMutation = (
-	config?: MutationConfig<
-		(data: CreateDisasterSchemaType) => Promise<DisasterReport["disaster"]>
-	>,
-) => {
+export const useCreateDisasterMutation = () => {
 	return useMutation({
-		...config,
 		mutationFn: (data: CreateDisasterSchemaType) => {
 			return clientFetch<DisasterReport["disaster"]>("disaster", "POST", data);
 		},
-		onSuccess: (data, variables, onMutateResult, context) => {
+		onSuccess: (data) => {
 			queryClient.invalidateQueries({ queryKey: ["disaster"] });
 			toast.success("Laporan bencana berhasil dibuat", {
 				description:
@@ -26,11 +21,9 @@ export const useCreateDisasterMutation = (
 						? "Laporanmu akan ditinjau admin"
 						: undefined,
 			});
-			config?.onSuccess?.(data, variables, onMutateResult, context);
 		},
-		onError: (error, variables, onMutateResult, context) => {
+		onError: () => {
 			toast.error("Gagal melaporkan bencana alam");
-			config?.onError?.(error, variables, onMutateResult, context);
 		},
 	});
 };
