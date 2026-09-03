@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import {
 	ArrowLeft,
 	Calendar,
@@ -163,16 +163,18 @@ function RouteComponent() {
 	const statusBadge = getStatusBadge(disaster.status);
 	const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${disaster.lat},${disaster.lng}`;
 
+	const handleBack = () => {
+		window.history.back();
+	};
+
 	return (
 		<MainLayout>
 			<div className="container mx-auto max-w-5xl px-4 py-6">
 				{/* Back button */}
 				<div className="mb-6">
-					<Button variant="ghost" size="sm" asChild>
-						<Link to="/">
-							<ArrowLeft className="size-4" />
-							Kembali ke Beranda
-						</Link>
+					<Button onClick={handleBack} variant="ghost" size="sm" asChild>
+						<ArrowLeft className="size-4" />
+						Kembali ke Beranda
 					</Button>
 				</div>
 
