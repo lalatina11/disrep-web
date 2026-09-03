@@ -1,5 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Coins, Loader2, PackagePlus, Plus, Receipt, Trash2 } from "lucide-react";
+import {
+	Coins,
+	Loader2,
+	PackagePlus,
+	Plus,
+	Receipt,
+	Trash2,
+} from "lucide-react";
 import { useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { MediaDropzone } from "#/components/forms/disaster/media-dropzone";
@@ -13,19 +20,15 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "#/components/ui/dialog";
-import {
-	Field,
-	FieldError,
-	FieldLabel,
-} from "#/components/ui/field";
+import { Field, FieldError, FieldLabel } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
 import { Separator } from "#/components/ui/separator";
 import { formatRupiah } from "#/lib/common";
 import { useCreateDisasterAid } from "#/lib/hooks/disaster-aid";
 import useUserStore from "#/lib/stores/use-user-store";
 import {
-	createDisasterAidSchema,
 	type CreateDisasterAidSchemaType,
+	createDisasterAidSchema,
 } from "#/lib/validations/disaster-aid";
 
 interface CreateDisasterAidDialogProps {
@@ -116,7 +119,8 @@ export function CreateDisasterAidDialog({
 						Catat Distribusi Bantuan
 					</DialogTitle>
 					<DialogDescription>
-						Tambahkan rincian barang logistik yang disalurkan dan unggah bukti dokumentasi atau nota serah terima.
+						Tambahkan rincian barang logistik yang disalurkan dan unggah bukti
+						dokumentasi atau nota serah terima.
 					</DialogDescription>
 				</DialogHeader>
 
@@ -145,7 +149,8 @@ export function CreateDisasterAidDialog({
 
 						<div className="space-y-3">
 							{fields.map((field, index) => {
-								const currentPrice = Number(watchedItems[index]?.item_price) || 0;
+								const currentPrice =
+									Number(watchedItems[index]?.item_price) || 0;
 								const currentQty = Number(watchedItems[index]?.quantity) || 0;
 								const subtotal = currentPrice * currentQty;
 
