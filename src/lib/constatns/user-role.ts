@@ -11,3 +11,5 @@ export const USER_ROLES = [
 ] as const;
 
 export const ADMIN_ROLES = USER_ROLES.filter((r) => r !== UserRoleType.USER);
+
+export type AdminRoleType = (typeof ADMIN_ROLES)[number];

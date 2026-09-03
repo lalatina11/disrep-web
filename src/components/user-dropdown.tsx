@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Plus, Shield, User } from "lucide-react";
-import useGetAdminAuthority from "#/lib/hooks/use-get-admin-authority";
+import { ADMIN_ROLES, type AdminRoleType } from "#/lib/constatns/user-role";
 import useUserStore from "#/lib/stores/use-user-store";
 import SignOutForm from "./forms/auth-form/sign-out-form";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -15,9 +15,10 @@ import { Separator } from "./ui/separator";
 
 const UserDropdown = () => {
 	const { user } = useUserStore();
-	const { data: isAdmin, isLoading } = useGetAdminAuthority();
 
-	if (!user || isLoading) return null;
+	if (!user) return null;
+
+	const isAdmin = ADMIN_ROLES.includes(user.role as AdminRoleType);
 
 	return (
 		<DropdownMenu>

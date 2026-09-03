@@ -1,3 +1,5 @@
+import type { UserRoleType } from "../constatns/user-role";
+
 export interface ApiResponseType<T> {
 	success: boolean;
 	message: string;
@@ -9,7 +11,7 @@ export interface User {
 	display_name: string;
 	email: string;
 	avatar: string;
-	role: string;
+	role: UserRoleType;
 	created_at: string;
 	updated_at: string;
 }
